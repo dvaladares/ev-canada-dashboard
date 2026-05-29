@@ -1,0 +1,6 @@
+# runtime artifacts (anchored to repo root; site/data/ is the tracked public copy)
+/data/
+logs/
+__pycache__/
+*.pyc
+.DS_Store
