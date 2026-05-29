@@ -9,6 +9,9 @@ PROJ="$(cd "$(dirname "$0")/.." && pwd)"
 PY="${EVDASH_PYTHON:-/opt/homebrew/bin/python3}"
 [ -x "$PY" ] || PY="$(command -v python3)"
 PORT="${EVDASH_PORT:-8787}"
+# Auto-deploy the hosted Vercel copy after each successful refresh.
+# Set EVDASH_DEPLOY=0 before running install.sh to disable (local-only mode).
+DEPLOY="${EVDASH_DEPLOY:-1}"
 UID_NUM="$(id -u)"
 LA="$HOME/Library/LaunchAgents"
 DOMAIN="gui/$UID_NUM"
@@ -40,6 +43,8 @@ cat > "$UPDATE_PLIST" <<EOF
   <key>EnvironmentVariables</key>
   <dict>
     <key>EVDASH_PYTHON</key><string>$PY</string>
+    <key>EVDASH_DEPLOY</key><string>$DEPLOY</string>
+    <key>HOME</key><string>$HOME</string>
     <key>PATH</key><string>/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
   </dict>
   <key>RunAtLoad</key><true/>
