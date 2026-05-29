@@ -24,7 +24,7 @@ three credible sources and is explicit about each one's limits.
 | **Spine** | **Statistics Canada**, Table [20-10-0025-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501) — new motor vehicle registrations, quarterly, by geography | EV totals, market share, BEV/PHEV split, powertrain mix, quarterly trend, by-province | National statistical authority. Open Licence. Quarterly (irregular release cadence). No brand dimension exists in any active StatCan table — confirmed by scanning all 8,200+ cubes. |
 | **Monthly** | **Statistics Canada**, Table [20-10-0085-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010008501) — new motor vehicle sales, monthly | The monthly trend view (toggle) + the "latest month" header badge | National authority, Open Licence, **most timely** (through the latest reported month). Zero-emission is a single bucket here (no BEV/PHEV split), and it's *sales* not *registrations* — so the monthly and quarterly series won't tie out exactly. |
 | **Brand** | **Transport Canada — iZEV program** ([Open Canada dataset](https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1)) | The by-brand chart (make-level BEV/PHEV) | Government provenance, machine-readable, redistributable (OGL-Canada). **But:** incentivized + price-capped vehicles only (undercounts premium brands, e.g. excludes Tesla Model S/X), and the program **ended 31 Mar 2025** — a frozen historical brand picture, not a complete or current count. |
-| **Current shares** | **S&P Global Mobility** (via OEM disclosures) | A reference note in Sources | Authoritative brand-level origin (S&P is what Transport Canada's own ZEV dashboard runs on), surfaced as a periodically-reviewed reference — the raw S&P dataset is paywalled and not redistributable. |
+| **Current shares** | **S&P Global Mobility** (as reported via GM Canada / trade press) | The **"Current brand shares"** panel | Authoritative brand-level origin (S&P is what Transport Canada's own ZEV dashboard runs on). A small set of attributed headline figures, **cited and hand-refreshed** — the raw S&P dataset is paywalled and its licence (like DesRosiers') forbids auto-scraping or republishing. |
 
 > **"Sales" vs "registrations":** the StatCan figures are new **registrations**, the standard
 > proxy for new-vehicle sales. "ZEV" = battery-electric (BEV) + plug-in hybrid (PHEV);
@@ -33,6 +33,27 @@ three credible sources and is explicit about each one's limits.
 If you need complete, current, brand-level Canadian EV data, the only path is a paid
 **S&P Global Mobility** or **DesRosiers** licence. This dashboard gets as close as the
 free/credible sources allow, and says so on the page.
+
+### Why the current brand shares are hand-curated, not auto-pulled
+
+We researched whether a third party that already licenses S&P/DesRosiers (e.g. Electric
+Autonomy Canada, GoodCarBadCar, the Transport Canada ZEV dashboard, AVÉQ) publishes
+brand-level numbers we could ingest on a schedule and attribute. Conclusion: **no clean,
+legal, pullable feed exists.**
+- Electric Autonomy publishes only *aggregate* ZEV share (no brands), as prose + a static
+  image, and its terms bar automated/commercial reuse.
+- GoodCarBadCar exposes brand/model data via its WordPress API, but `robots.txt` bans all
+  AI/data crawlers site-wide and the data is third-party-owned (with a known labelling bug).
+- AVÉQ has real by-model Québec data, but it's locked in PNG infographics, Québec-only, and
+  CC BY-**NC** (non-commercial).
+- S&P actively blocks scrapers; a DesRosiers subscription is *internal-use-only* and doesn't
+  grant republication rights either.
+
+So the legitimate pattern (how the trade press operates) is to **cite a small set of
+attributed headline figures** — restated, with a visible "Source: S&P Global Mobility via …"
+credit + link — refreshed by hand. That's the "Current brand shares" panel. To update it,
+edit `CURRENT_BRAND_SHARES` in `fetch_data.py` (the `rows`, `as_of`, and `reviewed` fields)
+when GM Canada's next quarterly EV release or S&P's "Canadian EV Insights" drops.
 
 ---
 

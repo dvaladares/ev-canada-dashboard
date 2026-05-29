@@ -485,19 +485,38 @@ def load_prev():
         return None
 
 
-# Current credible brand-share reference (S&P Global Mobility via OEM disclosures).
-# Periodically reviewed; not an automated feed. Update the figures + as_of when a newer
-# S&P-sourced disclosure is published.
-SP_BRAND_SHARES = {
-    "as_of": "2025 (full year)",
-    "source": "S&P Global Mobility (via GM Canada disclosures)",
-    "note": (
-        "Most current credible brand signal: Tesla remained the best-selling EV brand in "
-        "Canada in 2025; GM held ~21.2% of the EV market with Chevrolet at 13.3% (Equinox EV "
-        "the #2 most-registered EV). These are S&P-sourced new-registration shares cited in "
-        "OEM disclosures — authoritative origin, but a partial, periodically-updated reference "
-        "rather than a complete brand table."
-    ),
+# Current credible brand-share reference — S&P Global Mobility registration data, as
+# reported publicly via OEM disclosures / trade press. This is the authoritative *current*
+# brand signal, but S&P/DesRosiers data is licensed and CANNOT be auto-scraped or
+# republished wholesale (confirmed: S&P blocks crawlers; Electric Autonomy, GoodCarBadCar,
+# Drive Tesla all bar automated reuse). So these few headline figures are CURATED and
+# refreshed BY HAND with attribution — citing reported facts, not mirroring a dataset.
+# To refresh: update `as_of`, `rows`, and `reviewed` when a newer S&P-sourced figure is
+# published (e.g. the next GM Canada quarterly EV release or S&P "Canadian EV Insights").
+CURRENT_BRAND_SHARES = {
+    "as_of": "FY2025 + Q1 2026",
+    "reviewed": "2026-05-29",
+    "metric": "Share of new EV registrations, Canada",
+    "source": "S&P Global Mobility",
+    "via": "GM Canada release; Motor Illustrated / Drive Tesla Canada",
+    "source_url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
+    # Q1 2026 brand ranking (S&P Global Mobility, as reported publicly). Brand-level shares
+    # are comparable; "GM (all brands)" and "Cadillac (luxury)" use different denominators —
+    # see each note. Do NOT attribute these to Electric Autonomy (they publish aggregate only).
+    "rows": [
+        {"period": "Q1 2026", "label": "Chevrolet", "value": "9.7%", "note": "of the EV market"},
+        {"period": "Q1 2026", "label": "Kia", "value": "9.5%", "note": "of the EV market"},
+        {"period": "Q1 2026", "label": "Toyota", "value": "9.3%", "note": "of the EV market"},
+        {"period": "Q1 2026", "label": "Hyundai", "value": "8.7%", "note": "of the EV market"},
+        {"period": "Q1 2026", "label": "Tesla", "value": "7.8%", "note": "fallen from ~47% three years ago"},
+        {"period": "Q1 2026", "label": "GM (all brands)", "value": "~20%", "note": "#1 overall — Chevy+Cadillac+GMC; outsold Tesla; EV sales +13.1% YoY"},
+        {"period": "Q1 2026", "label": "Cadillac", "value": "50.6%", "note": "of the luxury-EV segment"},
+    ],
+    "context": "Full-year 2025: GM #1 at 21.2% (~25,000 EVs), Chevrolet 13.3% (Equinox EV the #2-registered EV); Tesla ~19,829 units, down ~63% YoY.",
+    "note": ("Most recent published brand figures, cited with attribution and refreshed by hand. "
+             "Canada has no free, redistributable brand-level data feed — S&P Global Mobility and "
+             "DesRosiers registration data is licensed and may not be auto-scraped or republished, "
+             "so these headline figures are quoted (like a reported statistic), not mirrored from a dataset."),
 }
 
 
@@ -519,6 +538,7 @@ def assemble(statcan, monthly, izev, prev):
         "by_province_latest": statcan.get("by_province_latest", []),
         "by_brand": izev.get("by_brand", []),
         "by_brand_meta": izev.get("by_brand_meta", {}),
+        "current_brand_shares": CURRENT_BRAND_SHARES,
         "sources": [
             {
                 "name": "Statistics Canada — Table 20-10-0025-01",
@@ -542,8 +562,10 @@ def assemble(statcan, monthly, izev, prev):
                 "accessed": TODAY,
             },
             {
-                "name": "S&P Global Mobility (via OEM disclosures)",
-                "detail": SP_BRAND_SHARES["note"],
+                "name": "S&P Global Mobility (via GM Canada / trade press)",
+                "detail": "Authoritative current brand shares (the 'Current brand shares' panel). "
+                          "S&P registration data is licensed — figures are cited with attribution, "
+                          "refreshed by hand, not scraped or republished as a dataset.",
                 "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
                 "accessed": TODAY,
             },
@@ -559,10 +581,12 @@ def assemble(statcan, monthly, izev, prev):
             "quarterly figures will not tie out exactly. The by-brand chart uses Transport Canada's iZEV incentive dataset, "
             "the only free, machine-readable Canadian source with a vehicle-make dimension — but it "
             "covers incentivized, price-capped vehicles only and the program ended 31 Mar 2025, so "
-            "it understates premium brands and is a frozen historical view. The most current brand "
-            "shares (S&P Global Mobility, via OEM disclosures) are listed above for reference; "
-            "complete, current, brand-level registration data in Canada is only available via paid "
-            "S&P Global Mobility / DesRosiers licences. Every figure is labelled with its source."
+            "it understates premium brands and is a frozen historical view. For the most current brand "
+            "picture, the 'Current brand shares' panel shows S&P Global Mobility figures (as reported "
+            "via GM Canada and trade press) — cited with attribution and refreshed by hand, because "
+            "complete, current, brand-level registration data in Canada exists only behind paid S&P "
+            "Global Mobility / DesRosiers licences whose terms forbid auto-scraping or republishing. "
+            "Every figure is labelled with its source."
         ),
         "notes": [],
         "build": {

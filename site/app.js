@@ -321,11 +321,41 @@
     meth.innerHTML = d.methodology ? esc(d.methodology).replace(/\n/g, "<br />") : "";
   }
 
+  function renderCurrentShares(d) {
+    var s = d.current_brand_shares;
+    var card = document.getElementById("shares-card");
+    if (!card) return;
+    if (!s || !s.rows || !s.rows.length) { card.hidden = true; return; }
+    card.hidden = false;
+    document.getElementById("shares-sub").textContent =
+      (s.metric || "Brand shares") + " · Source: " + (s.source || "") + (s.via ? " (via " + s.via + ")" : "");
+    document.getElementById("shares-asof").textContent = s.as_of || "";
+    var host = document.getElementById("shares-list");
+    host.innerHTML = "";
+    s.rows.forEach(function (r) {
+      var tile = el("div", { class: "share-tile" });
+      tile.innerHTML =
+        '<div class="stier">' + esc(r.period || "") + "</div>" +
+        '<div class="sval">' + esc(r.value || "") + "</div>" +
+        '<div class="slabel">' + esc(r.label || "") + "</div>" +
+        (r.note ? '<div class="snote">' + esc(r.note) + "</div>" : "");
+      host.appendChild(tile);
+    });
+    var ctx = document.getElementById("shares-context");
+    ctx.textContent = s.context || "";
+    ctx.hidden = !s.context;
+    var note = document.getElementById("shares-note");
+    var link = s.source_url ? ' <a href="' + esc(s.source_url) +
+      '" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">S&amp;P Global Mobility ↗</a>' : "";
+    note.innerHTML = "ⓘ " + esc(s.note || "") + (s.reviewed ? " (reviewed " + esc(s.reviewed) + ")" : "") + link;
+  }
+
   function render(d) {
     if (!d) return;
     renderHeader(d);
     renderKpis(d);
     renderBrands(d);
+    renderCurrentShares(d);
     renderMix(d);
     renderTrendCard(d);
     renderProvinces(d);
