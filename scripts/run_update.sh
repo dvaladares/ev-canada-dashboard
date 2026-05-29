@@ -2,10 +2,11 @@
 # Refresh the dashboard data. Safe to run manually or from launchd.
 # Usage: scripts/run_update.sh [--force-izev] [--quiet]
 #
-# Optional auto-deploy to Vercel (for the hosted public copy):
+# Optional auto-publish (for the hosted public copy):
 #   set EVDASH_DEPLOY=1 to, after a successful refresh, commit any changed
-#   tracked files (site/data/ev_sales.json, site/index.html), push to
-#   origin main, and trigger a Vercel production deploy.
+#   tracked files (site/data/ev_sales.json, site/index.html) and push to
+#   origin main. The Vercel project is git-connected to that branch, so the
+#   push itself triggers the production deploy (no `vercel` CLI call needed).
 #   When EVDASH_DEPLOY is unset/0, behaviour is unchanged (local refresh only).
 set -e
 PROJ="$(cd "$(dirname "$0")/.." && pwd)"
@@ -22,7 +23,6 @@ if [ "${EVDASH_DEPLOY:-0}" != "1" ]; then
 fi
 
 GIT="$(command -v git || echo /usr/bin/git)"
-VERCEL="${EVDASH_VERCEL:-$(command -v vercel || echo /opt/homebrew/bin/vercel)}"
 
 # Only the tracked outputs matter; root data/ is gitignored.
 # Use an array so the paths expand as separate arguments under zsh.
@@ -49,12 +49,12 @@ PYEOF
 )"
 
 if [ "$DATA_CHANGED" != "1" ]; then
-  echo "deploy: no substantive data change (only timestamp); reverting churn, skipping redeploy."
+  echo "publish: no substantive data change (only timestamp); reverting churn, skipping push."
   "$GIT" checkout -- "${TRACKED[@]}" 2>/dev/null || true
   exit 0
 fi
 
-echo "deploy: data changed; committing + pushing + redeploying."
+echo "publish: data changed; committing + pushing (Vercel auto-deploys on push)."
 "$GIT" add "${TRACKED[@]}"
 STAMP="$(date '+%Y-%m-%d %H:%M')"
 # Author pinned to personal identity (never the 7gen address).
@@ -63,8 +63,6 @@ STAMP="$(date '+%Y-%m-%d %H:%M')"
   -m "Automated by scripts/run_update.sh (launchd). Source: Statistics Canada + iZEV." \
   -m "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 
+# Vercel is git-connected to origin/main -> this push triggers the production deploy.
 "$GIT" push origin main
-
-# Project is CLI-linked (not git-connected), so deploy must be explicit.
-"$VERCEL" --prod --yes --cwd "$PROJ"
-echo "deploy: done."
+echo "publish: pushed; Vercel will deploy automatically."
