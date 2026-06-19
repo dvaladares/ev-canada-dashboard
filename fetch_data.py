@@ -418,10 +418,10 @@ def aggregate_izev():
             "period": period,
             "metric": "BEV + PHEV incentive claims",
             "credibility_note": (
-                "iZEV-incentivized vehicles only — price-capped (excludes premium EVs such as "
-                "Tesla Model S/X) and the federal program ended 31 Mar 2025, so this is a frozen "
-                "historical brand picture, not a complete or current sales count. For the most "
-                "current brand shares see the S&P Global Mobility figures in Sources below."
+                "iZEV-incentivized vehicles only. Price caps exclude premium EVs (such as the Tesla "
+                "Model S and X), and the federal program ended March 2025, so this is a historical "
+                "brand picture, not a complete or current sales count. For the most current brand "
+                "shares, see the S&P Global Mobility figures in the Current brand shares panel."
             ),
         },
         "_izev_total": grand_total,
@@ -495,7 +495,7 @@ def load_prev():
 # published (e.g. the next GM Canada quarterly EV release or S&P "Canadian EV Insights").
 CURRENT_BRAND_SHARES = {
     "as_of": "FY2025 + Q1 2026",
-    "reviewed": "2026-05-29",
+    "reviewed": "2026-06-19",
     "metric": "Share of new EV registrations, Canada",
     "source": "S&P Global Mobility",
     "via": "GM Canada release; Motor Illustrated / Drive Tesla Canada",
@@ -509,12 +509,12 @@ CURRENT_BRAND_SHARES = {
         {"period": "Q1 2026", "label": "Toyota", "value": "9.3%", "note": "of the EV market"},
         {"period": "Q1 2026", "label": "Hyundai", "value": "8.7%", "note": "of the EV market"},
         {"period": "Q1 2026", "label": "Tesla", "value": "7.8%", "note": "fallen from ~47% three years ago"},
-        {"period": "Q1 2026", "label": "GM (all brands)", "value": "~20%", "note": "#1 overall — Chevy+Cadillac+GMC; outsold Tesla; EV sales +13.1% YoY"},
+        {"period": "Q1 2026", "label": "GM (all brands)", "value": "~20%", "note": "#1 overall (Chevy, Cadillac, GMC); outsold Tesla; EV sales +13.1% YoY"},
         {"period": "Q1 2026", "label": "Cadillac", "value": "50.6%", "note": "of the luxury-EV segment"},
     ],
     "context": "Full-year 2025: GM #1 at 21.2% (~25,000 EVs), Chevrolet 13.3% (Equinox EV the #2-registered EV); Tesla ~19,829 units, down ~63% YoY.",
     "note": ("Most recent published brand figures, cited with attribution and refreshed by hand. "
-             "Canada has no free, redistributable brand-level data feed — S&P Global Mobility and "
+             "Canada has no free, redistributable brand-level data feed: S&P Global Mobility and "
              "DesRosiers registration data is licensed and may not be auto-scraped or republished, "
              "so these headline figures are quoted (like a reported statistic), not mirrored from a dataset."),
 }
@@ -541,53 +541,53 @@ def assemble(statcan, monthly, izev, prev):
         "current_brand_shares": CURRENT_BRAND_SHARES,
         "sources": [
             {
-                "name": "Statistics Canada — Table 20-10-0025-01",
-                "detail": "New motor vehicle registrations, quarterly, by geography (ZEV/BEV/PHEV). "
-                          "Authoritative totals, powertrain mix, trend and provincial split.",
+                "name": "Statistics Canada, Table 20-10-0025-01",
+                "detail": "Quarterly ZEV, BEV and PHEV registrations by province. Powers the totals, "
+                          "market share, powertrain mix, trend, and provincial breakdown.",
                 "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501",
                 "accessed": TODAY,
             },
             {
-                "name": "Statistics Canada — Table 20-10-0085-01",
-                "detail": "New motor vehicle sales, monthly (zero-emission bucket). Powers the monthly "
-                          "trend view — the most timely series (through the latest reported month).",
+                "name": "Statistics Canada, Table 20-10-0085-01",
+                "detail": "Monthly new-vehicle sales (zero-emission bucket). Powers the monthly trend "
+                          "view, the most timely series, through the latest reported month.",
                 "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010008501",
                 "accessed": TODAY,
             },
             {
-                "name": "Transport Canada — iZEV Program statistics (Open Canada)",
-                "detail": f"Incentivized BEV/PHEV claims by make/model — powers the by-brand chart. "
-                          f"{izev.get('_izev_fy', '')}. Incentivized + price-capped only; program ended Mar 2025.",
+                "name": "Transport Canada, iZEV Program (Open Canada)",
+                "detail": f"Incentivized BEV and PHEV claims by make ({izev.get('_izev_fy', '')}). "
+                          f"Powers the by-brand chart. Incentivized and price-capped only; the program "
+                          f"ended March 2025.",
                 "url": "https://open.canada.ca/data/en/dataset/" + IZEV_PKG,
                 "accessed": TODAY,
             },
             {
-                "name": "S&P Global Mobility (via GM Canada / trade press)",
-                "detail": "Authoritative current brand shares (the 'Current brand shares' panel). "
-                          "S&P registration data is licensed — figures are cited with attribution, "
-                          "refreshed by hand, not scraped or republished as a dataset.",
+                "name": "S&P Global Mobility (via GM Canada and trade press)",
+                "detail": "Current brand shares (the 'Current brand shares' panel), cited with "
+                          "attribution and refreshed by hand. S&P data is licensed, so it is not "
+                          "scraped or republished as a dataset.",
                 "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
                 "accessed": TODAY,
             },
         ],
-        "methodology": (
-            "Headline figures (EV registrations, market share, BEV/PHEV split, powertrain mix, "
-            "quarterly trend, and the provincial breakdown) come from Statistics Canada Table "
-            "20-10-0025-01 — new motor vehicle REGISTRATIONS, the standard proxy for new sales. "
-            "\"ZEV\" = battery-electric (BEV) + plug-in hybrid (PHEV); conventional hybrids are "
-            "counted separately. The trend chart toggles between quarterly registrations (20-10-0025, "
-            "with the BEV/PHEV split) and monthly SALES (20-10-0085, a single zero-emission bucket and "
-            "the most timely series) — these are two different StatCan series, so the monthly and "
-            "quarterly figures will not tie out exactly. The by-brand chart uses Transport Canada's iZEV incentive dataset, "
-            "the only free, machine-readable Canadian source with a vehicle-make dimension — but it "
-            "covers incentivized, price-capped vehicles only and the program ended 31 Mar 2025, so "
-            "it understates premium brands and is a frozen historical view. For the most current brand "
-            "picture, the 'Current brand shares' panel shows S&P Global Mobility figures (as reported "
-            "via GM Canada and trade press) — cited with attribution and refreshed by hand, because "
-            "complete, current, brand-level registration data in Canada exists only behind paid S&P "
-            "Global Mobility / DesRosiers licences whose terms forbid auto-scraping or republishing. "
-            "Every figure is labelled with its source."
-        ),
+        "methodology": [
+            "\"ZEV\" means battery-electric (BEV) plus plug-in hybrid (PHEV). Conventional hybrids "
+            "are counted separately.",
+            "Headline figures (registrations, market share, powertrain mix, the trend, and the "
+            "provincial split) come from Statistics Canada new motor vehicle registrations, the "
+            "standard proxy for new sales.",
+            "The trend chart toggles between quarterly registrations (Table 20-10-0025) and monthly "
+            "sales (Table 20-10-0085). These are two different Statistics Canada series, so the "
+            "monthly and quarterly numbers will not match exactly.",
+            "The by-brand chart uses Transport Canada's iZEV data, the only free Canadian source with "
+            "a vehicle-make breakdown. It covers incentivized, price-capped vehicles only, and the "
+            "program ended March 2025, so it understates premium brands and is a historical snapshot.",
+            "Current brand shares come from S&P Global Mobility (reported via GM Canada and trade "
+            "press), cited with attribution and refreshed by hand. Complete, current brand-level data "
+            "in Canada sits behind paid S&P or DesRosiers licences that do not allow republishing.",
+            "Every figure on this page is labelled with its source.",
+        ],
         "notes": [],
         "build": {
             "statcan_ok": bool(statcan.get("totals")),

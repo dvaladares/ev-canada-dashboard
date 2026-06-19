@@ -20,6 +20,16 @@
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
     return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
 
+  // ISO date -> friendly "June 19, 2026" (leaves non-ISO strings untouched)
+  var MONTHS_LONG = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+  function friendlyDate(s) {
+    if (!s) return "";
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s));
+    if (!m) return String(s);
+    return MONTHS_LONG[+m[2] - 1] + " " + (+m[3]) + ", " + m[1];
+  }
+
   function readEmbedded() {
     try { return JSON.parse(document.getElementById("ev-data").textContent); }
     catch (e) { return null; }
@@ -308,17 +318,24 @@
 
   function renderSources(d) {
     var host = document.getElementById("sources-list");
-    host.innerHTML = "";
-    (d.sources || []).forEach(function (s) {
-      var item = el("div", { class: "source-item" });
-      var link = s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.name) + "</a>" : "<strong>" + esc(s.name) + "</strong>";
-      var detail = s.detail ? " — " + esc(s.detail) : "";
-      var acc = s.accessed ? ' <span class="pill">accessed ' + esc(s.accessed) + "</span>" : "";
-      item.innerHTML = link + detail + acc;
-      host.appendChild(item);
-    });
+    var srcLis = (d.sources || []).map(function (s) {
+      var link = s.url
+        ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.name) + "</a>"
+        : "<strong>" + esc(s.name) + "</strong>";
+      var detail = s.detail ? ". " + esc(s.detail) : "";
+      var acc = s.accessed ? ' <span class="muted">Accessed ' + esc(friendlyDate(s.accessed)) + ".</span>" : "";
+      return "<li>" + link + detail + acc + "</li>";
+    }).join("");
+    host.innerHTML = '<h3 class="section-label">Sources</h3><ul class="src-list">' + srcLis + "</ul>";
+
     var meth = document.getElementById("methodology");
-    meth.innerHTML = d.methodology ? esc(d.methodology).replace(/\n/g, "<br />") : "";
+    var m = d.methodology;
+    if (Array.isArray(m)) {
+      meth.innerHTML = '<h3 class="section-label">How it&#39;s measured</h3><ul class="bullets">' +
+        m.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+    } else {
+      meth.innerHTML = m ? esc(m).replace(/\n/g, "<br />") : "";
+    }
   }
 
   function renderCurrentShares(d) {
@@ -347,7 +364,7 @@
     var note = document.getElementById("shares-note");
     var link = s.source_url ? ' <a href="' + esc(s.source_url) +
       '" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">S&amp;P Global Mobility ↗</a>' : "";
-    note.innerHTML = "ⓘ " + esc(s.note || "") + (s.reviewed ? " (reviewed " + esc(s.reviewed) + ")" : "") + link;
+    note.innerHTML = "ⓘ " + esc(s.note || "") + (s.reviewed ? " (reviewed " + esc(friendlyDate(s.reviewed)) + ")" : "") + link;
   }
 
   function render(d) {

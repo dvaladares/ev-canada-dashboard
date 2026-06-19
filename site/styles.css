@@ -122,6 +122,16 @@ table.data tr:last-child td { border-bottom: none; }
 .source-item a:hover { text-decoration: underline; }
 .note { background: var(--accent-soft); color: var(--ink); border-radius: 10px; padding: 12px 14px; font-size: 13px; margin-top: 14px; border: 1px solid var(--line); }
 .note.caveat { background: transparent; border: 1px dashed var(--warn); color: var(--ink-soft); }
+
+/* Sources & methodology — left-aligned, bulleted, friendly dates */
+.sources, .note { text-align: left; }
+.section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); margin: 4px 0 8px; }
+.src-list, .bullets { margin: 2px 0 20px; padding-left: 20px; text-align: left; }
+.src-list li, .bullets li { margin: 7px 0; line-height: 1.55; font-size: 13.5px; }
+.src-list li::marker, .bullets li::marker { color: var(--accent); }
+.src-list a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.src-list a:hover { text-decoration: underline; }
+.methodology { background: none; border: none; padding: 0; margin: 0; }
 footer.foot { margin-top: 32px; text-align: center; color: var(--ink-soft); font-size: 12px; }
 footer.foot code { background: var(--card); padding: 2px 6px; border-radius: 5px; border: 1px solid var(--line); }
 

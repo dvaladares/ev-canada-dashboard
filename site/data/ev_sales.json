@@ -1,65 +1,52 @@
 {
   "status": "ok",
-  "generated_at": "2026-05-29T14:27:32-04:00",
+  "generated_at": "2026-06-19T14:53:32-04:00",
   "subtitle": "Zero-emission vehicle registrations across Canada, refreshed automatically from Statistics Canada, with brand detail from Transport Canada's iZEV dataset.",
   "latest_period": {
-    "label": "Q4 2025",
+    "label": "Q1 2026",
     "type": "quarter"
   },
   "totals": {
-    "ev_registrations_latest": 46170,
-    "ev_share_pct_latest": 11.2,
-    "bev_latest": 30464,
-    "phev_latest": 15706,
-    "yoy_growth_pct": -43.2,
-    "period_label": "Q4 2025",
+    "ev_registrations_latest": 43113,
+    "ev_share_pct_latest": 10.8,
+    "bev_latest": 29808,
+    "phev_latest": 13305,
+    "yoy_growth_pct": 15.8,
+    "period_label": "Q1 2026",
     "latest_month": {
-      "label": "Mar 2026",
-      "zev": 21574,
-      "share_pct": 12.2
+      "label": "Apr 2026",
+      "zev": 17795,
+      "share_pct": 9.7
     }
   },
   "powertrain_mix": [
     {
       "fuel_type": "Gasoline",
-      "count": 297087,
-      "share_pct": 72.2
+      "count": 283361,
+      "share_pct": 71.3
     },
     {
       "fuel_type": "Hybrid electric",
-      "count": 50469,
-      "share_pct": 12.3
+      "count": 53584,
+      "share_pct": 13.5
     },
     {
       "fuel_type": "Battery electric",
-      "count": 30464,
-      "share_pct": 7.4
+      "count": 29808,
+      "share_pct": 7.5
     },
     {
       "fuel_type": "Diesel",
-      "count": 17918,
+      "count": 17543,
       "share_pct": 4.4
     },
     {
       "fuel_type": "Plug-in hybrid",
-      "count": 15706,
-      "share_pct": 3.8
-    },
-    {
-      "fuel_type": "Other fuel types",
-      "count": 19,
-      "share_pct": 0.0
+      "count": 13305,
+      "share_pct": 3.3
     }
   ],
   "ev_trend_quarterly": [
-    {
-      "period": "Q1'23",
-      "ref_per": "2023-01-01",
-      "bev": 24217,
-      "phev": 6761,
-      "zev_total": 30978,
-      "zev_share_pct": 8.7
-    },
     {
       "period": "Q2'23",
       "ref_per": "2023-04-01",
@@ -143,20 +130,21 @@
     {
       "period": "Q4'25",
       "ref_per": "2025-10-01",
-      "bev": 30464,
-      "phev": 15706,
-      "zev_total": 46170,
-      "zev_share_pct": 11.2
+      "bev": 31482,
+      "phev": 15722,
+      "zev_total": 47204,
+      "zev_share_pct": 11.4
+    },
+    {
+      "period": "Q1'26",
+      "ref_per": "2026-01-01",
+      "bev": 29808,
+      "phev": 13305,
+      "zev_total": 43113,
+      "zev_share_pct": 10.8
     }
   ],
   "ev_trend_monthly": [
-    {
-      "period": "Apr'24",
-      "ref_per": "2024-04-01",
-      "zev": 20601,
-      "all": 175815,
-      "zev_share_pct": 11.7
-    },
     {
       "period": "May'24",
       "ref_per": "2024-05-01",
@@ -317,63 +305,65 @@
       "zev": 21574,
       "all": 176500,
       "zev_share_pct": 12.2
+    },
+    {
+      "period": "Apr'26",
+      "ref_per": "2026-04-01",
+      "zev": 17795,
+      "all": 183921,
+      "zev_share_pct": 9.7
     }
   ],
   "by_province_latest": [
     {
       "province": "Quebec",
-      "zev": 20461,
-      "share_pct": 19.2
+      "zev": 16420,
+      "share_pct": 17.6
     },
     {
       "province": "Ontario",
-      "zev": 11261,
-      "share_pct": 7.3
+      "zev": 12608,
+      "share_pct": 8.2
     },
     {
       "province": "British Columbia",
-      "zev": 9997,
-      "share_pct": 20.8
+      "zev": 8983,
+      "share_pct": 19.1
     },
     {
       "province": "Manitoba",
-      "zev": 650,
-      "share_pct": 5.1
+      "zev": 960,
+      "share_pct": 7.7
     },
     {
       "province": "Nova Scotia",
-      "zev": 555,
-      "share_pct": 4.8
+      "zev": 508,
+      "share_pct": 5.4
     },
     {
       "province": "New Brunswick",
-      "zev": 383,
-      "share_pct": 3.9
+      "zev": 421,
+      "share_pct": 4.9
     },
     {
       "province": "Saskatchewan",
-      "zev": 257,
-      "share_pct": 2.2
+      "zev": 365,
+      "share_pct": 3.0
     },
     {
       "province": "Prince Edward Island",
-      "zev": 103,
-      "share_pct": 6.1
+      "zev": 100,
+      "share_pct": 7.5
     },
     {
       "province": "Yukon",
-      "zev": 26,
-      "share_pct": 7.3
+      "zev": 28,
+      "share_pct": 6.6
     },
     {
       "province": "Northwest Territories",
       "zev": 5,
-      "share_pct": 1.2
-    },
-    {
-      "province": "Nunavut",
-      "zev": 1,
-      "share_pct": 1.1
+      "share_pct": 1.0
     }
   ],
   "by_brand": [
@@ -472,11 +462,11 @@
     "source_url": "https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1",
     "period": "iZEV claims, FY2024-25 (Apr 2024 – Mar 2025)",
     "metric": "BEV + PHEV incentive claims",
-    "credibility_note": "iZEV-incentivized vehicles only — price-capped (excludes premium EVs such as Tesla Model S/X) and the federal program ended 31 Mar 2025, so this is a frozen historical brand picture, not a complete or current sales count. For the most current brand shares see the S&P Global Mobility figures in Sources below."
+    "credibility_note": "iZEV-incentivized vehicles only. Price caps exclude premium EVs (such as the Tesla Model S and X), and the federal program ended March 2025, so this is a historical brand picture, not a complete or current sales count. For the most current brand shares, see the S&P Global Mobility figures in the Current brand shares panel."
   },
   "current_brand_shares": {
     "as_of": "FY2025 + Q1 2026",
-    "reviewed": "2026-05-29",
+    "reviewed": "2026-06-19",
     "metric": "Share of new EV registrations, Canada",
     "source": "S&P Global Mobility",
     "via": "GM Canada release; Motor Illustrated / Drive Tesla Canada",
@@ -516,7 +506,7 @@
         "period": "Q1 2026",
         "label": "GM (all brands)",
         "value": "~20%",
-        "note": "#1 overall — Chevy+Cadillac+GMC; outsold Tesla; EV sales +13.1% YoY"
+        "note": "#1 overall (Chevy, Cadillac, GMC); outsold Tesla; EV sales +13.1% YoY"
       },
       {
         "period": "Q1 2026",
@@ -526,40 +516,47 @@
       }
     ],
     "context": "Full-year 2025: GM #1 at 21.2% (~25,000 EVs), Chevrolet 13.3% (Equinox EV the #2-registered EV); Tesla ~19,829 units, down ~63% YoY.",
-    "note": "Most recent published brand figures, cited with attribution and refreshed by hand. Canada has no free, redistributable brand-level data feed — S&P Global Mobility and DesRosiers registration data is licensed and may not be auto-scraped or republished, so these headline figures are quoted (like a reported statistic), not mirrored from a dataset."
+    "note": "Most recent published brand figures, cited with attribution and refreshed by hand. Canada has no free, redistributable brand-level data feed: S&P Global Mobility and DesRosiers registration data is licensed and may not be auto-scraped or republished, so these headline figures are quoted (like a reported statistic), not mirrored from a dataset."
   },
   "sources": [
     {
-      "name": "Statistics Canada — Table 20-10-0025-01",
-      "detail": "New motor vehicle registrations, quarterly, by geography (ZEV/BEV/PHEV). Authoritative totals, powertrain mix, trend and provincial split.",
+      "name": "Statistics Canada, Table 20-10-0025-01",
+      "detail": "Quarterly ZEV, BEV and PHEV registrations by province. Powers the totals, market share, powertrain mix, trend, and provincial breakdown.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501",
-      "accessed": "2026-05-29"
+      "accessed": "2026-06-19"
     },
     {
-      "name": "Statistics Canada — Table 20-10-0085-01",
-      "detail": "New motor vehicle sales, monthly (zero-emission bucket). Powers the monthly trend view — the most timely series (through the latest reported month).",
+      "name": "Statistics Canada, Table 20-10-0085-01",
+      "detail": "Monthly new-vehicle sales (zero-emission bucket). Powers the monthly trend view, the most timely series, through the latest reported month.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010008501",
-      "accessed": "2026-05-29"
+      "accessed": "2026-06-19"
     },
     {
-      "name": "Transport Canada — iZEV Program statistics (Open Canada)",
-      "detail": "Incentivized BEV/PHEV claims by make/model — powers the by-brand chart. FY2024-25. Incentivized + price-capped only; program ended Mar 2025.",
+      "name": "Transport Canada, iZEV Program (Open Canada)",
+      "detail": "Incentivized BEV and PHEV claims by make (FY2024-25). Powers the by-brand chart. Incentivized and price-capped only; the program ended March 2025.",
       "url": "https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1",
-      "accessed": "2026-05-29"
+      "accessed": "2026-06-19"
     },
     {
-      "name": "S&P Global Mobility (via GM Canada / trade press)",
-      "detail": "Authoritative current brand shares (the 'Current brand shares' panel). S&P registration data is licensed — figures are cited with attribution, refreshed by hand, not scraped or republished as a dataset.",
+      "name": "S&P Global Mobility (via GM Canada and trade press)",
+      "detail": "Current brand shares (the 'Current brand shares' panel), cited with attribution and refreshed by hand. S&P data is licensed, so it is not scraped or republished as a dataset.",
       "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
-      "accessed": "2026-05-29"
+      "accessed": "2026-06-19"
     }
   ],
-  "methodology": "Headline figures (EV registrations, market share, BEV/PHEV split, powertrain mix, quarterly trend, and the provincial breakdown) come from Statistics Canada Table 20-10-0025-01 — new motor vehicle REGISTRATIONS, the standard proxy for new sales. \"ZEV\" = battery-electric (BEV) + plug-in hybrid (PHEV); conventional hybrids are counted separately. The trend chart toggles between quarterly registrations (20-10-0025, with the BEV/PHEV split) and monthly SALES (20-10-0085, a single zero-emission bucket and the most timely series) — these are two different StatCan series, so the monthly and quarterly figures will not tie out exactly. The by-brand chart uses Transport Canada's iZEV incentive dataset, the only free, machine-readable Canadian source with a vehicle-make dimension — but it covers incentivized, price-capped vehicles only and the program ended 31 Mar 2025, so it understates premium brands and is a frozen historical view. For the most current brand picture, the 'Current brand shares' panel shows S&P Global Mobility figures (as reported via GM Canada and trade press) — cited with attribution and refreshed by hand, because complete, current, brand-level registration data in Canada exists only behind paid S&P Global Mobility / DesRosiers licences whose terms forbid auto-scraping or republishing. Every figure is labelled with its source.",
+  "methodology": [
+    "\"ZEV\" means battery-electric (BEV) plus plug-in hybrid (PHEV). Conventional hybrids are counted separately.",
+    "Headline figures (registrations, market share, powertrain mix, the trend, and the provincial split) come from Statistics Canada new motor vehicle registrations, the standard proxy for new sales.",
+    "The trend chart toggles between quarterly registrations (Table 20-10-0025) and monthly sales (Table 20-10-0085). These are two different Statistics Canada series, so the monthly and quarterly numbers will not match exactly.",
+    "The by-brand chart uses Transport Canada's iZEV data, the only free Canadian source with a vehicle-make breakdown. It covers incentivized, price-capped vehicles only, and the program ended March 2025, so it understates premium brands and is a historical snapshot.",
+    "Current brand shares come from S&P Global Mobility (reported via GM Canada and trade press), cited with attribution and refreshed by hand. Complete, current brand-level data in Canada sits behind paid S&P or DesRosiers licences that do not allow republishing.",
+    "Every figure on this page is labelled with its source."
+  ],
   "notes": [],
   "build": {
     "statcan_ok": true,
     "izev_fy": "FY2024-25",
     "izev_total": 196171,
-    "izev_fetched": "2026-05-29T10:47:42"
+    "izev_fetched": "2026-06-19T14:53:32"
   }
 }
