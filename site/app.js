@@ -1,4 +1,4 @@
-/* Canada EV Sales Dashboard — dependency-free renderer
+/* Canada EV Sales Dashboard: dependency-free renderer
  * Reads the embedded JSON snapshot (#ev-data). When served over HTTP it also
  * polls data/ev_sales.json so an open tab refreshes itself as new data lands.
  */
@@ -9,8 +9,8 @@
   var nf = new Intl.NumberFormat("en-CA");
   var COLORS = { bev: "#0f8a5f", phev: "#1f6feb", hybrid: "#f0a500", other: "#94a3a0" };
 
-  function fmt(n) { return (n == null || isNaN(n)) ? "—" : nf.format(Math.round(n)); }
-  function pct(n, d) { d = d == null ? 1 : d; return (n == null || isNaN(n)) ? "—" : Number(n).toFixed(d) + "%"; }
+  function fmt(n) { return (n == null || isNaN(n)) ? "n/a" : nf.format(Math.round(n)); }
+  function pct(n, d) { d = d == null ? 1 : d; return (n == null || isNaN(n)) ? "n/a" : Number(n).toFixed(d) + "%"; }
   function el(tag, attrs, html) {
     var e = document.createElement(tag);
     if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
@@ -46,19 +46,19 @@
 
   // ===== renderers =====
   function renderHeader(d) {
-    var lp = (d.latest_period && d.latest_period.label) || (d.totals && d.totals.period_label) || "—";
+    var lp = (d.latest_period && d.latest_period.label) || (d.totals && d.totals.period_label) || "n/a";
     document.getElementById("period-badge").textContent = "Latest quarter: " + lp;
     var mb = document.getElementById("month-badge");
     var lm = d.totals && d.totals.latest_month;
     if (mb) {
-      if (lm && lm.label) { mb.hidden = false; mb.textContent = "Latest month: " + lm.label + " · " + fmt(lm.zev); }
+      if (lm && lm.label) { mb.hidden = false; mb.textContent = "Latest month: " + lm.label + " | " + fmt(lm.zev); }
       else { mb.hidden = true; }
     }
     var when = d.generated_at ? new Date(d.generated_at) : null;
     document.getElementById("updated-badge").textContent = when
       ? "Updated " + when.toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" })
-      : "Updated —";
-    document.getElementById("gen-time").textContent = when ? when.toLocaleString("en-CA") : "—";
+      : "Updated n/a";
+    document.getElementById("gen-time").textContent = when ? when.toLocaleString("en-CA") : "n/a";
     document.getElementById("poll-mins").textContent = POLL_MINUTES;
     if (d.subtitle) document.getElementById("subtitle").textContent = d.subtitle;
   }
@@ -73,17 +73,17 @@
     var t = d.totals || {};
     var host = document.getElementById("kpis");
     var cards = "";
-    cards += kpiCard("EV registrations", fmt(t.ev_registrations_latest), esc(t.period_label || "") + " · BEV + PHEV");
+    cards += kpiCard("EV registrations", fmt(t.ev_registrations_latest), esc(t.period_label || "") + " | BEV + PHEV");
     cards += kpiCard("EV market share", pct(t.ev_share_pct_latest), "of all new vehicles");
     var bev = t.bev_latest, phev = t.phev_latest;
-    var split = (bev != null && phev != null) ? fmt(bev) + " / " + fmt(phev) : "—";
+    var split = (bev != null && phev != null) ? fmt(bev) + " / " + fmt(phev) : "n/a";
     cards += kpiCard("BEV / PHEV", split, "battery vs plug-in hybrid");
     if (t.yoy_growth_pct != null && !isNaN(t.yoy_growth_pct)) {
       var up = t.yoy_growth_pct >= 0;
-      cards += kpiCard("Year-over-year", (up ? "+" : "") + pct(t.yoy_growth_pct), up ? "▲ vs same period last year" : "▼ vs same period last year", up ? "up" : "down");
+      cards += kpiCard("Year-over-year", (up ? "+" : "") + pct(t.yoy_growth_pct), up ? "Up vs same period last year" : "Down vs same period last year", up ? "up" : "down");
     } else {
       var n = (d.by_brand || []).length;
-      cards += kpiCard("Brands tracked", n ? fmt(n) : "—", "with EV registrations");
+      cards += kpiCard("Brands tracked", n ? fmt(n) : "-", "with EV registrations");
     }
     host.innerHTML = cards;
   }
@@ -122,18 +122,28 @@
     if (m.metric) bits.push(esc(m.metric));
     if (m.period) bits.push(esc(m.period));
     if (m.source) bits.push("Source: " + esc(m.source));
-    sub.innerHTML = bits.join(" · ") || "—";
+    sub.innerHTML = bits.join(" | ") || "n/a";
     renderBars("brand-bars", (d.by_brand || []).map(function (b) {
       return { name: b.brand, value: b.units, share: b.share_pct };
     }));
     var caveat = document.getElementById("brand-caveat");
-    if (m.credibility_note) { caveat.hidden = false; caveat.innerHTML = "ⓘ " + esc(m.credibility_note); }
+    if (m.credibility_note) { caveat.hidden = false; caveat.innerHTML = "Note: " + esc(m.credibility_note); }
     else caveat.hidden = true;
+  }
+
+  function renderVehicleTypes(d) {
+    var sub = document.getElementById("vt-sub");
+    if (!sub) return;
+    sub.textContent = (d.totals && d.totals.period_label ? d.totals.period_label + " | " : "") +
+      "ZEV registrations by vehicle type, Statistics Canada. Percent = ZEV share of that type's new registrations.";
+    renderBars("vt-bars", (d.by_vehicle_type_latest || []).map(function (r) {
+      return { name: r.vehicle_type, value: r.zev, share: r.share_pct };
+    }));
   }
 
   function renderProvinces(d) {
     document.getElementById("prov-sub").textContent =
-      (d.totals && d.totals.period_label ? d.totals.period_label + " · " : "") + "ZEV registrations, Statistics Canada";
+      (d.totals && d.totals.period_label ? d.totals.period_label + " | " : "") + "ZEV registrations, Statistics Canada";
     renderBars("prov-bars", (d.by_province_latest || []).map(function (p) {
       return { name: p.province, value: p.zev, share: p.share_pct };
     }), { alt: true });
@@ -190,7 +200,7 @@
     rows.forEach(function (r) {
       var s = el("span");
       s.innerHTML = '<i style="background:' + ptColor(r.fuel_type) + '"></i>' +
-        esc(r.fuel_type) + ' — <strong style="color:var(--ink)">' + fmt(r.count) + "</strong> · " +
+        esc(r.fuel_type) + ': <strong style="color:var(--ink)">' + fmt(r.count) + "</strong> | " +
         pct(r.share_pct != null ? r.share_pct : (r.count / total) * 100);
       leg.appendChild(s);
     });
@@ -287,27 +297,27 @@
     if (trendMode === "month" && !hasMonthly) trendMode = "quarter";
 
     if (trendMode === "month") {
-      titleEl.textContent = "EV trend — monthly";
-      subEl.textContent = "Zero-emission new-vehicle sales · Statistics Canada 20-10-0085";
+      titleEl.textContent = "EV trend: monthly";
+      subEl.textContent = "Zero-emission new-vehicle sales | Statistics Canada 20-10-0085";
       drawLineChart("trend-chart", monthly.map(function (r) {
         return { label: r.period, value: r.zev,
           tip: r.period + ": " + fmt(r.zev) + " ZEV sales" +
                (r.zev_share_pct != null ? " (" + pct(r.zev_share_pct) + " share)" : "") };
       }), { color: COLORS.bev });
       var lm = d.totals && d.totals.latest_month;
-      footEl.textContent = lm ? ("Latest month — " + lm.label + ": " + fmt(lm.zev) + " ZEV sales" +
+      footEl.textContent = lm ? ("Latest month, " + lm.label + ": " + fmt(lm.zev) + " ZEV sales" +
         (lm.share_pct != null ? " (" + pct(lm.share_pct) + " of new sales)" : "")) : "";
     } else {
-      titleEl.textContent = "EV trend — quarterly";
-      subEl.textContent = "ZEV registrations (BEV + PHEV) · Statistics Canada 20-10-0025";
+      titleEl.textContent = "EV trend: quarterly";
+      subEl.textContent = "ZEV registrations (BEV + PHEV) | Statistics Canada 20-10-0025";
       drawLineChart("trend-chart", (d.ev_trend_quarterly || []).map(function (r) {
         return { label: r.period, value: r.zev_total,
           tip: r.period + ": " + fmt(r.zev_total) + " ZEV" +
-               (r.bev != null ? "  ·  BEV " + fmt(r.bev) + " / PHEV " + fmt(r.phev) : "") +
-               (r.zev_share_pct != null ? "  ·  " + pct(r.zev_share_pct) + " share" : "") };
+               (r.bev != null ? "  |  BEV " + fmt(r.bev) + " / PHEV " + fmt(r.phev) : "") +
+               (r.zev_share_pct != null ? "  |  " + pct(r.zev_share_pct) + " share" : "") };
       }), { color: COLORS.bev });
       var t = d.totals || {};
-      footEl.textContent = t.period_label ? ("Latest quarter — " + t.period_label + ": " +
+      footEl.textContent = t.period_label ? ("Latest quarter, " + t.period_label + ": " +
         fmt(t.ev_registrations_latest) + " ZEV registrations" +
         (t.ev_share_pct_latest != null ? " (" + pct(t.ev_share_pct_latest) + " share)" : "")) : "";
     }
@@ -345,7 +355,7 @@
     if (!s || !s.rows || !s.rows.length) { card.hidden = true; return; }
     card.hidden = false;
     document.getElementById("shares-sub").textContent =
-      (s.metric || "Brand shares") + " · Source: " + (s.source || "") + (s.via ? " (via " + s.via + ")" : "");
+      (s.metric || "Brand shares") + " | Source: " + (s.source || "") + (s.via ? " (via " + s.via + ")" : "");
     document.getElementById("shares-asof").textContent = s.as_of || "";
     var host = document.getElementById("shares-list");
     host.innerHTML = "";
@@ -363,8 +373,8 @@
     ctx.hidden = !s.context;
     var note = document.getElementById("shares-note");
     var link = s.source_url ? ' <a href="' + esc(s.source_url) +
-      '" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">S&amp;P Global Mobility ↗</a>' : "";
-    note.innerHTML = "ⓘ " + esc(s.note || "") + (s.reviewed ? " (reviewed " + esc(friendlyDate(s.reviewed)) + ")" : "") + link;
+      '" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">S&amp;P Global Mobility </a>' : "";
+    note.innerHTML = "Note: " + esc(s.note || "") + (s.reviewed ? " (reviewed " + esc(friendlyDate(s.reviewed)) + ")" : "") + link;
   }
 
   function render(d) {
@@ -376,6 +386,7 @@
     renderMix(d);
     renderTrendCard(d);
     renderProvinces(d);
+    renderVehicleTypes(d);
     renderSources(d);
   }
 
@@ -413,7 +424,7 @@
           current = fresh; render(fresh); flashLive();
         }
       })
-      .catch(function () { /* offline / file mode — embedded snapshot stands */ });
+      .catch(function () { /* offline / file mode: embedded snapshot stands */ });
   }
 
   tryFetch();

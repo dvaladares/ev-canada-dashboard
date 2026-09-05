@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Install the two launchd agents:
-#   * com.dvaladares.evcanada.update  — refreshes data daily at 09:00 (+ at load)
-#   * com.dvaladares.evcanada.server  — keeps the local web server alive
+#   * com.dvaladares.evcanada.update : refreshes data daily at 09:00 (+ at load)
+#   * com.dvaladares.evcanada.server : keeps the local web server alive
 # Idempotent: re-running re-generates the plists and reloads the agents.
 set -e
 

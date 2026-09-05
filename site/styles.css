@@ -1,4 +1,4 @@
-/* Canada EV Sales Dashboard — dependency-free styles */
+/* Canada EV Sales Dashboard: dependency-free styles */
 :root {
   --bg: #f5f7f6;
   --card: #ffffff;
@@ -82,6 +82,7 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
 .bar-fill.alt { background: linear-gradient(90deg, var(--accent-2), #6ba6ff); }
 .bar-row .val { font-variant-numeric: tabular-nums; font-weight: 650; white-space: nowrap; }
 .bar-row .val small { color: var(--ink-soft); font-weight: 500; }
+.barlist.wide .bar-row { grid-template-columns: 200px 1fr auto; }
 
 /* Current brand shares tiles */
 .sharelist { display: grid; grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); gap: 12px; }
@@ -123,7 +124,7 @@ table.data tr:last-child td { border-bottom: none; }
 .note { background: var(--accent-soft); color: var(--ink); border-radius: 10px; padding: 12px 14px; font-size: 13px; margin-top: 14px; border: 1px solid var(--line); }
 .note.caveat { background: transparent; border: 1px dashed var(--warn); color: var(--ink-soft); }
 
-/* Sources & methodology — left-aligned, bulleted, friendly dates */
+/* Sources & methodology: left-aligned, bulleted, friendly dates */
 .sources, .note { text-align: left; }
 .section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); margin: 4px 0 8px; }
 .src-list, .bullets { margin: 2px 0 20px; padding-left: 20px; text-align: left; }

@@ -1,0 +1,35 @@
+name: Refresh data
+
+on:
+  schedule:
+    - cron: "30 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch the latest public data
+        run: python3 fetch_data.py --quiet
+
+      - name: Commit and push only when the figures changed
+        run: |
+          if python3 scripts/data_changed.py; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add site/data/ev_sales.json site/index.html
+            git commit -m "Data refresh: $(date -u +%Y-%m-%d)" -m "Automated by .github/workflows/refresh.yml. Sources: Statistics Canada, Transport Canada iZEV."
+            git push
+          else
+            git checkout -- site/data/ev_sales.json site/index.html
+            echo "No substantive data change; nothing to publish."
+          fi

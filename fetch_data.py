@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-fetch_data.py — Canada EV Sales by Brand dashboard data pipeline.
+fetch_data.py: Canada EV Sales by Brand dashboard data pipeline.
 
 Pulls from credible public sources, normalizes to the dashboard JSON schema,
 writes data/ev_sales.json, injects an embedded snapshot into site/index.html,
@@ -76,6 +76,8 @@ GEO = {
     "Yukon": 5231, "Northwest Territories": 5270, "Nunavut": 5314,
 }
 PROVINCES = [k for k in GEO if k != "Canada"]
+# Vehicle type member ids for 20100025 (light vehicles only; no medium/heavy in this table)
+VEHICLE_TYPES = {"Passenger cars": 2, "Pickup trucks": 3, "Multi-purpose vehicles": 4, "Vans": 5}
 
 # iZEV open dataset (CKAN)
 IZEV_PKG = "42986a95-be23-436e-af15-7c6bf292a2e1"
@@ -123,9 +125,9 @@ def wds_post(endpoint, payload, timeout=60):
 # ----------------------------------------------------------------------------
 # StatCan layer
 # ----------------------------------------------------------------------------
-def coord(geo_id, fuel_id):
+def coord(geo_id, fuel_id, vt_id=1):
     """Build a 10-part coordinate: Geography.Fuel.VehicleType(Total=1).Stat(1).0..."""
-    return f"{geo_id}.{fuel_id}.1.1.0.0.0.0.0.0"
+    return f"{geo_id}.{fuel_id}.{vt_id}.1.0.0.0.0.0.0"
 
 
 def quarter_label(ref_per, compact=False):
@@ -260,6 +262,26 @@ def build_statcan_layer():
             })
     by_province.sort(key=lambda r: -r["zev"])
 
+    # By vehicle type (latest quarter, Canada): ZEV + BEV/PHEV + all-fuel for share within type
+    log("StatCan: fetching vehicle-type ZEV for latest quarter...")
+    vt_coords = []
+    for vt in VEHICLE_TYPES.values():
+        for fk in ("zev", "bev", "phev", "all"):
+            vt_coords.append(coord(GEO["Canada"], FUEL[fk], vt))
+    vt_data = fetch_coords(vt_coords, latest_n=2)
+    by_vehicle_type = []
+    for name, vt in VEHICLE_TYPES.items():
+        def vt_val(fk, _vt=vt):
+            return dict(vt_data.get(coord(GEO["Canada"], FUEL[fk], _vt), [])).get(latest_rp)
+        z, a = vt_val("zev"), vt_val("all")
+        if z and z > 0:
+            by_vehicle_type.append({
+                "vehicle_type": name, "zev": z, "all": a,
+                "bev": vt_val("bev"), "phev": vt_val("phev"),
+                "share_pct": round(z / a * 100.0, 1) if a else None,
+            })
+    by_vehicle_type.sort(key=lambda r: -r["zev"])
+
     log(f"StatCan: latest {totals['period_label']} ZEV={int(latest_zev):,} "
         f"share={totals['ev_share_pct_latest']}% provinces={len(by_province)}")
 
@@ -269,12 +291,13 @@ def build_statcan_layer():
         "powertrain_mix": powertrain_mix,
         "ev_trend_quarterly": trend,
         "by_province_latest": by_province,
+        "by_vehicle_type_latest": by_vehicle_type,
         "_release_time": _latest_release_time(canada),
     }
 
 
 def build_monthly_layer():
-    """Monthly ZEV *sales* (Table 20-10-0085) — most timely series. Returns trend + latest month."""
+    """Monthly ZEV *sales* (Table 20-10-0085): most timely series. Returns trend + latest month."""
     log("StatCan: fetching monthly ZEV sales (20100085)...")
     data = fetch_coords([MONTHLY_ZEV_COORD, MONTHLY_ALL_COORD], latest_n=MONTHLY_N, pid=PID_SALES)
     zev = data.get(MONTHLY_ZEV_COORD, [])
@@ -413,7 +436,7 @@ def aggregate_izev():
     layer = {
         "by_brand": rows,
         "by_brand_meta": {
-            "source": "Transport Canada — iZEV Program (Open Canada)",
+            "source": "Transport Canada: iZEV Program (Open Canada)",
             "source_url": "https://open.canada.ca/data/en/dataset/" + IZEV_PKG,
             "period": period,
             "metric": "BEV + PHEV incentive claims",
@@ -442,7 +465,7 @@ def _fy_period_phrase(fy_label):
         return fy_label
     start = m.group(1)
     end = "20" + m.group(2)
-    return f"iZEV claims, {fy_label} (Apr {start} – Mar {end})"
+    return f"iZEV claims, {fy_label} (Apr {start} to Mar {end})"
 
 
 def get_izev_layer(prev):
@@ -485,12 +508,12 @@ def load_prev():
         return None
 
 
-# Current credible brand-share reference — S&P Global Mobility registration data, as
+# Current credible brand-share reference: S&P Global Mobility registration data, as
 # reported publicly via OEM disclosures / trade press. This is the authoritative *current*
 # brand signal, but S&P/DesRosiers data is licensed and CANNOT be auto-scraped or
 # republished wholesale (confirmed: S&P blocks crawlers; Electric Autonomy, GoodCarBadCar,
 # Drive Tesla all bar automated reuse). So these few headline figures are CURATED and
-# refreshed BY HAND with attribution — citing reported facts, not mirroring a dataset.
+# refreshed BY HAND with attribution: citing reported facts, not mirroring a dataset.
 # To refresh: update `as_of`, `rows`, and `reviewed` when a newer S&P-sourced figure is
 # published (e.g. the next GM Canada quarterly EV release or S&P "Canadian EV Insights").
 CURRENT_BRAND_SHARES = {
@@ -501,7 +524,7 @@ CURRENT_BRAND_SHARES = {
     "via": "GM Canada release; Motor Illustrated / Drive Tesla Canada",
     "source_url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
     # Q1 2026 brand ranking (S&P Global Mobility, as reported publicly). Brand-level shares
-    # are comparable; "GM (all brands)" and "Cadillac (luxury)" use different denominators —
+    # are comparable; "GM (all brands)" and "Cadillac (luxury)" use different denominators -
     # see each note. Do NOT attribute these to Electric Autonomy (they publish aggregate only).
     "rows": [
         {"period": "Q1 2026", "label": "Chevrolet", "value": "9.7%", "note": "of the EV market"},
@@ -528,22 +551,23 @@ def assemble(statcan, monthly, izev, prev):
     data = {
         "status": "ok",
         "generated_at": generated,
-        "subtitle": ("Zero-emission vehicle registrations across Canada, refreshed automatically "
-                     "from Statistics Canada, with brand detail from Transport Canada's iZEV dataset."),
-        "latest_period": statcan.get("latest_period", {"label": "—"}),
+        "subtitle": ("Independent, public-data view of zero-emission vehicle registrations in Canada: "
+                     "totals, market share, trend, provinces, vehicle types, and brands."),
+        "latest_period": statcan.get("latest_period", {"label": "-"}),
         "totals": totals,
         "powertrain_mix": statcan.get("powertrain_mix", []),
         "ev_trend_quarterly": statcan.get("ev_trend_quarterly", []),
         "ev_trend_monthly": monthly.get("ev_trend_monthly", []),
         "by_province_latest": statcan.get("by_province_latest", []),
+        "by_vehicle_type_latest": statcan.get("by_vehicle_type_latest", []),
         "by_brand": izev.get("by_brand", []),
         "by_brand_meta": izev.get("by_brand_meta", {}),
         "current_brand_shares": CURRENT_BRAND_SHARES,
         "sources": [
             {
                 "name": "Statistics Canada, Table 20-10-0025-01",
-                "detail": "Quarterly ZEV, BEV and PHEV registrations by province. Powers the totals, "
-                          "market share, powertrain mix, trend, and provincial breakdown.",
+                "detail": "Quarterly ZEV, BEV and PHEV registrations by province and vehicle type. Powers the "
+                          "totals, market share, powertrain mix, trend, provincial and vehicle-type breakdowns.",
                 "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501",
                 "accessed": TODAY,
             },
@@ -586,6 +610,10 @@ def assemble(statcan, monthly, izev, prev):
             "Current brand shares come from S&P Global Mobility (reported via GM Canada and trade "
             "press), cited with attribution and refreshed by hand. Complete, current brand-level data "
             "in Canada sits behind paid S&P or DesRosiers licences that do not allow republishing.",
+            "The vehicle-type panel splits ZEV registrations into passenger cars, pickup trucks, "
+            "multi-purpose vehicles (SUVs and crossovers) and vans, from the same Statistics Canada "
+            "registration table. Medium and heavy trucks and buses are not in that table, so this "
+            "dashboard covers light vehicles only.",
             "Every figure on this page is labelled with its source.",
         ],
         "notes": [],
@@ -633,7 +661,7 @@ def main():
     log("=== update run start ===")
     prev = load_prev()
 
-    # StatCan (authoritative spine) — fall back to previous published values on failure
+    # StatCan (authoritative spine): fall back to previous published values on failure
     try:
         statcan = build_statcan_layer()
     except (urllib.error.URLError, RuntimeError, ValueError, KeyError) as e:
@@ -641,12 +669,13 @@ def main():
         if prev:
             log("StatCan: reusing previous published spine.")
             statcan = {k: prev.get(k) for k in
-                       ("latest_period", "totals", "powertrain_mix", "ev_trend_quarterly", "by_province_latest")}
+                       ("latest_period", "totals", "powertrain_mix", "ev_trend_quarterly",
+                        "by_province_latest", "by_vehicle_type_latest")}
         else:
             log("StatCan: no previous data; aborting (page keeps placeholder).")
             return 1
 
-    # Monthly sales series (independent failure mode — falls back to previous values)
+    # Monthly sales series (independent failure mode: falls back to previous values)
     try:
         monthly = build_monthly_layer()
     except (urllib.error.URLError, RuntimeError, ValueError, KeyError) as e:
@@ -660,8 +689,8 @@ def main():
     data = assemble(statcan, monthly, izev, prev)
     write_outputs(data)
     inject_html(data)
-    log(f"=== update run done: {data['latest_period'].get('label')} · "
-        f"{len(data['by_brand'])} brands · {data['totals'].get('ev_share_pct_latest')}% EV share ===")
+    log(f"=== update run done: {data['latest_period'].get('label')} | "
+        f"{len(data['by_brand'])} brands | {data['totals'].get('ev_share_pct_latest')}% EV share ===")
     return 0
 
 
