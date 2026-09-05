@@ -5,7 +5,7 @@ Canada: headline totals, market share, powertrain mix, a quarterly and monthly t
 provincial split, a vehicle-type split, and a by-brand view. Every figure names its
 source. Everything comes from public data.
 
-Live site: https://ev-canada-dashboard.vercel.app
+Live site: https://ev-canada-dashboard.vercel.app (the About tab is at /#about)
 
 ![dashboard](docs/preview.png)
 
