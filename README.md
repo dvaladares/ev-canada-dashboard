@@ -1,153 +1,126 @@
-# Canada EV Sales by Brand — self-updating dashboard
+# EV Canada Dashboard
 
-A local web page that shows up-to-date zero-emission vehicle (EV) registrations in
-Canada — headline totals, market share, powertrain mix, a trend you can switch between
-**quarterly and monthly**, a provincial breakdown, and a by-brand ranking. It
-**refreshes itself**: a `launchd` agent pulls fresh data on a schedule and the page
-re-renders automatically.
+An independent, self-updating dashboard of zero-emission vehicle (ZEV) registrations in
+Canada: headline totals, market share, powertrain mix, a quarterly and monthly trend, the
+provincial split, a vehicle-type split, and a by-brand view. Every figure names its
+source. Everything comes from public data.
 
-Live at **http://127.0.0.1:8787/** once installed (loopback only — not exposed to your network).
+Live site: add your Vercel URL here.
 
 ![dashboard](docs/preview.png)
 
----
+## What it shows
 
-## Data sources (and why they're credible)
+| Panel | What it answers | Source |
+|---|---|---|
+| Headline cards | How many ZEVs were registered last quarter, their share of all new vehicles, the BEV vs PHEV split, and year-over-year change | Statistics Canada 20-10-0025-01 |
+| Trend (quarterly or monthly) | Where the market is going | Statistics Canada 20-10-0025-01 (quarterly registrations) and 20-10-0085-01 (monthly sales) |
+| Powertrain mix | Gasoline, hybrid, BEV, PHEV, diesel shares of new registrations | Statistics Canada 20-10-0025-01 |
+| By province | Which provinces lead, in units and in share | Statistics Canada 20-10-0025-01 |
+| By vehicle type | Passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers), vans | Statistics Canada 20-10-0025-01 |
+| By brand | Which makes sold the most incentivized EVs (historical) | Transport Canada iZEV program, Open Government Licence |
+| Current brand shares | The most recent published brand-share figures, quoted with attribution | S&P Global Mobility, as reported by GM Canada and trade press |
 
-Every figure on the page is labelled with its source. The honest reality of Canadian
-EV data shaped the design: the authoritative government source has **no brand
-dimension**, and there is **no free, live, brand-level feed**. So the dashboard layers
-three credible sources and is explicit about each one's limits.
+"ZEV" means battery-electric (BEV) plus plug-in hybrid (PHEV). Conventional hybrids are
+counted separately.
 
-| Layer | Source | What it powers | Credibility / caveat |
-|---|---|---|---|
-| **Spine** | **Statistics Canada**, Table [20-10-0025-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501) — new motor vehicle registrations, quarterly, by geography | EV totals, market share, BEV/PHEV split, powertrain mix, quarterly trend, by-province | National statistical authority. Open Licence. Quarterly (irregular release cadence). No brand dimension exists in any active StatCan table — confirmed by scanning all 8,200+ cubes. |
-| **Monthly** | **Statistics Canada**, Table [20-10-0085-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010008501) — new motor vehicle sales, monthly | The monthly trend view (toggle) + the "latest month" header badge | National authority, Open Licence, **most timely** (through the latest reported month). Zero-emission is a single bucket here (no BEV/PHEV split), and it's *sales* not *registrations* — so the monthly and quarterly series won't tie out exactly. |
-| **Brand** | **Transport Canada — iZEV program** ([Open Canada dataset](https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1)) | The by-brand chart (make-level BEV/PHEV) | Government provenance, machine-readable, redistributable (OGL-Canada). **But:** incentivized + price-capped vehicles only (undercounts premium brands, e.g. excludes Tesla Model S/X), and the program **ended 31 Mar 2025** — a frozen historical brand picture, not a complete or current count. |
-| **Current shares** | **S&P Global Mobility** (as reported via GM Canada / trade press) | The **"Current brand shares"** panel | Authoritative brand-level origin (S&P is what Transport Canada's own ZEV dashboard runs on). A small set of attributed headline figures, **cited and hand-refreshed** — the raw S&P dataset is paywalled and its licence (like DesRosiers') forbids auto-scraping or republishing. |
+## Scope and limits, stated plainly
 
-> **"Sales" vs "registrations":** the StatCan figures are new **registrations**, the standard
-> proxy for new-vehicle sales. "ZEV" = battery-electric (BEV) + plug-in hybrid (PHEV);
-> conventional hybrids are counted separately.
+- Light vehicles only. The Statistics Canada registration table covers passenger cars,
+  pickup trucks, multi-purpose vehicles and vans. Medium and heavy trucks and buses are not
+  in it, so they are not on this page.
+- No free brand feed exists in Canada. The by-brand chart uses Transport Canada iZEV claims:
+  incentivized, price-capped vehicles only, and the program ended March 31, 2025. It
+  understates premium brands and is a historical picture. The "Current brand shares" panel
+  quotes the latest S&P Global Mobility figures as reported publicly. S&P and DesRosiers
+  data is licensed and is never scraped or republished here.
+- Two Statistics Canada series feed the trend. Quarterly registrations and monthly sales are
+  different series and will not tie out exactly.
+- Statistics Canada revises data and releases on an irregular cadence. The page shows what
+  is published on the day it refreshes.
 
-If you need complete, current, brand-level Canadian EV data, the only path is a paid
-**S&P Global Mobility** or **DesRosiers** licence. This dashboard gets as close as the
-free/credible sources allow, and says so on the page.
+## Independence and disclaimer
 
-### Why the current brand shares are hand-curated, not auto-pulled
+This is a personal project. It is not affiliated with, sponsored by, or endorsed by any
+employer, past or present, or by any data provider. It uses public data only. It is for
+general information and is not financial, investment, or purchasing advice. Figures are
+reproduced as published; read the note on each panel before you quote a number. Found an
+error? Open an issue.
 
-We researched whether a third party that already licenses S&P/DesRosiers (e.g. Electric
-Autonomy Canada, GoodCarBadCar, the Transport Canada ZEV dashboard, AVÉQ) publishes
-brand-level numbers we could ingest on a schedule and attribute. Conclusion: **no clean,
-legal, pullable feed exists.**
-- Electric Autonomy publishes only *aggregate* ZEV share (no brands), as prose + a static
-  image, and its terms bar automated/commercial reuse.
-- GoodCarBadCar exposes brand/model data via its WordPress API, but `robots.txt` bans all
-  AI/data crawlers site-wide and the data is third-party-owned (with a known labelling bug).
-- AVÉQ has real by-model Québec data, but it's locked in PNG infographics, Québec-only, and
-  CC BY-**NC** (non-commercial).
-- S&P actively blocks scrapers; a DesRosiers subscription is *internal-use-only* and doesn't
-  grant republication rights either.
+## How it updates itself
 
-So the legitimate pattern (how the trade press operates) is to **cite a small set of
-attributed headline figures** — restated, with a visible "Source: S&P Global Mobility via …"
-credit + link — refreshed by hand. That's the "Current brand shares" panel. To update it,
-edit `CURRENT_BRAND_SHARES` in `fetch_data.py` (the `rows`, `as_of`, and `reviewed` fields)
-when GM Canada's next quarterly EV release or S&P's "Canadian EV Insights" drops.
-
----
-
-## How the auto-update works
-
-Two user-level `launchd` agents (no `sudo`, fully reversible):
-
-- **`com.dvaladares.evcanada.update`** — runs `fetch_data.py` **at login and daily at 09:00**.
-  It pulls the StatCan slices (tiny coordinate-API calls) every run, and re-downloads +
-  re-aggregates the iZEV brand file at most weekly (cached in `data/raw/`). StatCan releases
-  at 08:30 ET, so the 09:00 run catches new data the same day.
-- **`com.dvaladares.evcanada.server`** — keeps a loopback web server alive on port 8787
-  (`KeepAlive`), so the page is always reachable.
-
-Each run writes `site/data/ev_sales.json`, embeds the same snapshot inline into
-`site/index.html` (so the page also works opened directly as a file), and updates
-`data/meta.json`. An open browser tab re-checks `data/ev_sales.json` every 60 minutes and
-re-renders if the data changed — no manual reload needed.
+A GitHub Actions workflow (`.github/workflows/refresh.yml`) runs `fetch_data.py` every day
+at 13:30 UTC (09:30 Eastern, one hour after Statistics Canada's 08:30 release). If the
+figures changed, it commits `site/data/ev_sales.json` and the snapshot embedded in
+`site/index.html` and pushes to `main`. Vercel deploys on push. If only the timestamp
+changed, nothing is committed.
 
 ```
-data release  ──►  launchd (daily 09:00 / at login)  ──►  fetch_data.py
-                                                              │
-                 StatCan WDS API  ─┐                          ├─►  site/data/ev_sales.json
-                 iZEV CSV (cached) ─┤── normalize to schema ──┤─►  embed into index.html
-                 S&P note (static) ─┘                          └─►  data/meta.json + logs
-                                                              │
-        browser (polls every 60 min)  ◄── loopback server ◄──┘
+Statistics Canada WDS API  --+
+Transport Canada iZEV CSV  --+--> fetch_data.py --> site/data/ev_sales.json
+S&P note (hand-curated)    --+                  --> snapshot embedded in site/index.html
+                                                      |
+GitHub Actions (daily) --> commit if changed --> push --> Vercel deploy
 ```
 
----
+An open browser tab re-checks `data/ev_sales.json` every 60 minutes and re-renders if the
+data changed.
 
-## Install / manage
+## Run it locally
+
+Python 3.9 or newer, standard library only. No pip installs.
 
 ```sh
-cd ~/Developer/ev-canada-dashboard
-./scripts/install.sh            # generate + load both launchd agents, do a first refresh
-open http://127.0.0.1:8787/     # view it
+git clone https://github.com/dvaladares/ev-canada-dashboard.git
+cd ev-canada-dashboard
+python3 fetch_data.py            # pulls the data, writes site/data/ev_sales.json
+cd site && python3 -m http.server 8787
 ```
 
-Other commands:
+Open http://127.0.0.1:8787/. Add `--force-izev` to re-download the iZEV brand file (it is
+cached for a week in `data/raw/`).
 
-```sh
-./scripts/run_update.sh             # refresh data now (manual)
-./scripts/run_update.sh --force-izev  # also re-download the iZEV brand file now
-./scripts/uninstall.sh              # stop + remove both agents (project files untouched)
-tail -f logs/update.log             # watch refreshes
-cat data/meta.json                  # last run summary
-```
-
-Change the port: `EVDASH_PORT=9000 ./scripts/install.sh`.
-Use a specific Python: `EVDASH_PYTHON=/opt/homebrew/bin/python3 ./scripts/install.sh`.
-
-To reach it from another device on your Tailscale mesh, change the server bind in
-`scripts/serve.sh` from `127.0.0.1` to `0.0.0.0` (or your Tailscale IP) and re-install —
-but be aware that exposes the page to your tailnet.
-
----
+Optional macOS local mode: `scripts/install.sh` sets up two user-level launchd agents
+(daily refresh at 09:00 and a loopback web server on port 8787). `scripts/uninstall.sh`
+removes them. `scripts/run_update.sh` refreshes by hand.
 
 ## Project layout
 
 ```
-ev-canada-dashboard/
-├── fetch_data.py          # the pipeline (Python stdlib only — no pip installs)
-├── site/
-│   ├── index.html         # the page (embeds a data snapshot, regenerated each run)
-│   ├── app.js             # dependency-free renderer + SVG charts + 60-min polling
-│   ├── styles.css         # light/dark, responsive
-│   └── data/ev_sales.json # generated: the live data the page fetches
-├── data/
-│   ├── meta.json          # last-run summary
-│   └── raw/izev_brand.json# cached iZEV aggregate (refreshed ≤ weekly)
-├── scripts/
-│   ├── run_update.sh  serve.sh  install.sh  uninstall.sh
-├── logs/                  # update.log + launchd stdout/err
-└── README.md
+fetch_data.py                  the pipeline (Python stdlib only)
+site/index.html                the page (embeds a data snapshot, regenerated each run)
+site/app.js                    dependency-free renderer, SVG charts, 60-minute polling
+site/styles.css                light and dark, responsive
+site/data/ev_sales.json        generated: the live data the page reads
+scripts/data_changed.py        exit 0 when the figures changed vs HEAD (used by CI)
+scripts/run_update.sh          local refresh, optional manual publish
+scripts/install.sh, uninstall.sh, serve.sh   optional macOS launchd mode
+.github/workflows/refresh.yml  the daily self-update
+data/, logs/                   runtime cache and logs (gitignored)
 ```
 
 ## Data schema (`site/data/ev_sales.json`)
 
-`status`, `generated_at`, `latest_period`, `totals` (ev_registrations_latest,
-ev_share_pct_latest, bev_latest, phev_latest, yoy_growth_pct, period_label),
-`powertrain_mix[]`, `ev_trend_quarterly[]`, `by_province_latest[]`, `by_brand[]`,
-`by_brand_meta`, `sources[]`, `methodology`. The front-end is decoupled from the sources
-via this schema, so adding/swapping a source only touches `fetch_data.py`.
+`status`, `generated_at`, `subtitle`, `latest_period`, `totals` (ev_registrations_latest,
+ev_share_pct_latest, bev_latest, phev_latest, yoy_growth_pct, period_label, latest_month),
+`powertrain_mix[]`, `ev_trend_quarterly[]`, `ev_trend_monthly[]`, `by_province_latest[]`,
+`by_vehicle_type_latest[]`, `by_brand[]`, `by_brand_meta`, `current_brand_shares`,
+`sources[]`, `methodology[]`. The front end reads only this schema, so adding or swapping
+a source touches `fetch_data.py` alone.
 
-## Notes & limitations
+## Refreshing the hand-curated brand shares
 
-- The big Q1-2025 drop and negative year-over-year you'll see are **real**: the federal
-  iZEV fund was exhausted (paused Jan 2025) and Québec paused its rebate — both dented ZEV
-  registrations. The data is not wrong.
-- StatCan's quarterly release cadence is irregular (multi-quarter catch-up batches happen).
-  The daily poll handles this; it picks up whatever StatCan has published.
-- The brand chart is iZEV-based and therefore historical/biased (see the on-page caveat).
-  When a newer S&P-sourced brand disclosure appears, update `SP_BRAND_SHARES` in
-  `fetch_data.py`.
-- Updates only fire while the Mac is awake/logged in (standard `launchd` agent behaviour);
-  a missed run is caught at next login and by the next daily fire.
+When a newer S&P-sourced brand figure is published (for example a GM Canada quarterly EV
+release), update `CURRENT_BRAND_SHARES` in `fetch_data.py`: `as_of`, `rows`, `reviewed`.
+Quote the reported figure with its attribution. Do not scrape licensed datasets.
+
+## Contributing
+
+Issues and pull requests are welcome. Keep these rules: public, redistributable data only;
+every figure labelled with its source; no external dependencies in the pipeline or the
+page; ASCII-only source files.
+
+## Licence
+
+Code: MIT (see LICENSE). Data: Statistics Canada Open Licence and Transport Canada Open
+Government Licence, as noted on each panel.

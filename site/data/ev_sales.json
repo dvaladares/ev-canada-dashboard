@@ -1,7 +1,7 @@
 {
   "status": "ok",
-  "generated_at": "2026-06-19T14:53:32-04:00",
-  "subtitle": "Zero-emission vehicle registrations across Canada, refreshed automatically from Statistics Canada, with brand detail from Transport Canada's iZEV dataset.",
+  "generated_at": "2026-09-05T11:08:18-04:00",
+  "subtitle": "Independent, public-data view of zero-emission vehicle registrations in Canada: totals, market share, trend, provinces, vehicle types, and brands.",
   "latest_period": {
     "label": "Q1 2026",
     "type": "quarter"
@@ -14,9 +14,9 @@
     "yoy_growth_pct": 15.8,
     "period_label": "Q1 2026",
     "latest_month": {
-      "label": "Apr 2026",
-      "zev": 17795,
-      "share_pct": 9.7
+      "label": "Jun 2026",
+      "zev": 21876,
+      "share_pct": 11.5
     }
   },
   "powertrain_mix": [
@@ -145,20 +145,6 @@
     }
   ],
   "ev_trend_monthly": [
-    {
-      "period": "May'24",
-      "ref_per": "2024-05-01",
-      "zev": 22612,
-      "all": 185178,
-      "zev_share_pct": 12.2
-    },
-    {
-      "period": "Jun'24",
-      "ref_per": "2024-06-01",
-      "zev": 21731,
-      "all": 166941,
-      "zev_share_pct": 13.0
-    },
     {
       "period": "Jul'24",
       "ref_per": "2024-07-01",
@@ -309,9 +295,23 @@
     {
       "period": "Apr'26",
       "ref_per": "2026-04-01",
-      "zev": 17795,
-      "all": 183921,
+      "zev": 17834,
+      "all": 184149,
       "zev_share_pct": 9.7
+    },
+    {
+      "period": "May'26",
+      "ref_per": "2026-05-01",
+      "zev": 18271,
+      "all": 190527,
+      "zev_share_pct": 9.6
+    },
+    {
+      "period": "Jun'26",
+      "ref_per": "2026-06-01",
+      "zev": 21876,
+      "all": 190167,
+      "zev_share_pct": 11.5
     }
   ],
   "by_province_latest": [
@@ -364,6 +364,40 @@
       "province": "Northwest Territories",
       "zev": 5,
       "share_pct": 1.0
+    }
+  ],
+  "by_vehicle_type_latest": [
+    {
+      "vehicle_type": "Multi-purpose vehicles",
+      "zev": 34118,
+      "all": 256815,
+      "bev": 23648,
+      "phev": 10470,
+      "share_pct": 13.3
+    },
+    {
+      "vehicle_type": "Passenger cars",
+      "zev": 6241,
+      "all": 45057,
+      "bev": 3545,
+      "phev": 2696,
+      "share_pct": 13.9
+    },
+    {
+      "vehicle_type": "Pickup trucks",
+      "zev": 1635,
+      "all": 77743,
+      "bev": 1635,
+      "phev": 0,
+      "share_pct": 2.1
+    },
+    {
+      "vehicle_type": "Vans",
+      "zev": 1119,
+      "all": 17986,
+      "bev": 980,
+      "phev": 139,
+      "share_pct": 6.2
     }
   ],
   "by_brand": [
@@ -458,9 +492,9 @@
     }
   ],
   "by_brand_meta": {
-    "source": "Transport Canada — iZEV Program (Open Canada)",
+    "source": "Transport Canada: iZEV Program (Open Canada)",
     "source_url": "https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1",
-    "period": "iZEV claims, FY2024-25 (Apr 2024 – Mar 2025)",
+    "period": "iZEV claims, FY2024-25 (Apr 2024 to Mar 2025)",
     "metric": "BEV + PHEV incentive claims",
     "credibility_note": "iZEV-incentivized vehicles only. Price caps exclude premium EVs (such as the Tesla Model S and X), and the federal program ended March 2025, so this is a historical brand picture, not a complete or current sales count. For the most current brand shares, see the S&P Global Mobility figures in the Current brand shares panel."
   },
@@ -521,27 +555,27 @@
   "sources": [
     {
       "name": "Statistics Canada, Table 20-10-0025-01",
-      "detail": "Quarterly ZEV, BEV and PHEV registrations by province. Powers the totals, market share, powertrain mix, trend, and provincial breakdown.",
+      "detail": "Quarterly ZEV, BEV and PHEV registrations by province and vehicle type. Powers the totals, market share, powertrain mix, trend, provincial and vehicle-type breakdowns.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501",
-      "accessed": "2026-06-19"
+      "accessed": "2026-09-05"
     },
     {
       "name": "Statistics Canada, Table 20-10-0085-01",
       "detail": "Monthly new-vehicle sales (zero-emission bucket). Powers the monthly trend view, the most timely series, through the latest reported month.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010008501",
-      "accessed": "2026-06-19"
+      "accessed": "2026-09-05"
     },
     {
       "name": "Transport Canada, iZEV Program (Open Canada)",
       "detail": "Incentivized BEV and PHEV claims by make (FY2024-25). Powers the by-brand chart. Incentivized and price-capped only; the program ended March 2025.",
       "url": "https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1",
-      "accessed": "2026-06-19"
+      "accessed": "2026-09-05"
     },
     {
       "name": "S&P Global Mobility (via GM Canada and trade press)",
       "detail": "Current brand shares (the 'Current brand shares' panel), cited with attribution and refreshed by hand. S&P data is licensed, so it is not scraped or republished as a dataset.",
       "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
-      "accessed": "2026-06-19"
+      "accessed": "2026-09-05"
     }
   ],
   "methodology": [
@@ -550,6 +584,7 @@
     "The trend chart toggles between quarterly registrations (Table 20-10-0025) and monthly sales (Table 20-10-0085). These are two different Statistics Canada series, so the monthly and quarterly numbers will not match exactly.",
     "The by-brand chart uses Transport Canada's iZEV data, the only free Canadian source with a vehicle-make breakdown. It covers incentivized, price-capped vehicles only, and the program ended March 2025, so it understates premium brands and is a historical snapshot.",
     "Current brand shares come from S&P Global Mobility (reported via GM Canada and trade press), cited with attribution and refreshed by hand. Complete, current brand-level data in Canada sits behind paid S&P or DesRosiers licences that do not allow republishing.",
+    "The vehicle-type panel splits ZEV registrations into passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans, from the same Statistics Canada registration table. Medium and heavy trucks and buses are not in that table, so this dashboard covers light vehicles only.",
     "Every figure on this page is labelled with its source."
   ],
   "notes": [],
@@ -557,6 +592,6 @@
     "statcan_ok": true,
     "izev_fy": "FY2024-25",
     "izev_total": 196171,
-    "izev_fetched": "2026-06-19T14:53:32"
+    "izev_fetched": "2026-09-05T11:08:18"
   }
 }
