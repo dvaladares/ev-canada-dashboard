@@ -5,51 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>EV Canada Dashboard</title>
 <meta name="description" content="Independent, self-updating dashboard of zero-emission vehicle registrations in Canada: totals, market share, trend, provinces, vehicle types, and brands. Public data from Statistics Canada and Transport Canada." />
+<meta property="og:title" content="EV Canada Dashboard" />
+<meta property="og:description" content="Zero-emission vehicle registrations in Canada, from public data, refreshed daily." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" />
 <link rel="stylesheet" href="styles.css" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f8a5f'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EEV%3C/text%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E9F6E'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EEV%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
-<div class="wrap">
 
-  <header class="top">
-    <div class="title-block">
-      <h1>EV Canada Dashboard</h1>
-      <p id="subtitle">Independent, public-data view of zero-emission vehicle registrations in Canada.</p>
-    </div>
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="#dashboard">
+      <span class="brand-mark">EV</span>
+      <span class="brand-text"><span class="brand-name">EV Canada Dashboard</span><span class="brand-tag">Public data. Updated daily.</span></span>
+    </a>
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" class="tab on" data-tab="dashboard">Dashboard</button>
+      <button type="button" class="tab" data-tab="about">About</button>
+    </nav>
     <div class="badges">
-      <span class="badge" id="period-badge">Latest quarter: ...</span>
-      <span class="badge" id="month-badge" hidden>Latest month: ...</span>
       <span class="badge live"><span class="dot pulse" id="live-dot"></span><span id="updated-badge">Updated ...</span></span>
     </div>
-  </header>
+  </div>
+</header>
+
+<main class="wrap">
+
+<div class="pane on" data-pane="dashboard" id="dashboard">
+
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">Zero-emission vehicles in Canada</p>
+      <h1>How fast is Canada going electric?</h1>
+      <p id="subtitle" class="lede">Independent, public-data view of zero-emission vehicle registrations in Canada.</p>
+    </div>
+    <div class="hero-badges">
+      <span class="badge" id="period-badge">Latest quarter: ...</span>
+      <span class="badge" id="month-badge" hidden>Latest month: ...</span>
+    </div>
+  </section>
 
   <!-- KPI cards -->
   <section class="kpis" id="kpis"><!-- rendered by app.js --></section>
 
-  <!-- Headline: by brand -->
-  <section class="card full">
-    <h2>EV registrations by brand</h2>
-    <p class="card-sub" id="brand-sub">...</p>
-    <div class="barlist" id="brand-bars"></div>
-    <div class="note caveat" id="brand-caveat" hidden></div>
-  </section>
-
-  <!-- Current brand shares (attributed, hand-curated) -->
-  <section class="card full" id="shares-card" hidden>
-    <div class="card-head">
-      <div>
-        <h2>Current brand shares</h2>
-        <p class="card-sub" id="shares-sub">...</p>
-      </div>
-      <span class="pill" id="shares-asof">...</span>
+  <!-- Data status pillboxes -->
+  <section class="status-wrap">
+    <div class="section-head">
+      <h2>Data status</h2>
+      <p class="card-sub">What feeds this page, the latest period each source covers, and when it was last pulled. <button type="button" class="linklike" data-tab="about">Sources and method</button></p>
     </div>
-    <div class="sharelist" id="shares-list"></div>
-    <p class="muted" id="shares-context" style="font-size:12.5px;margin:14px 0 0;"></p>
-    <div class="note caveat" id="shares-note"></div>
+    <div class="status" id="status"><!-- rendered by app.js --></div>
   </section>
 
-  <!-- Two-column: powertrain mix + quarterly trend -->
-  <section class="grid cols-2" style="margin-bottom:16px;">
+  <!-- Trend + mix -->
+  <section class="grid cols-2">
     <div class="card" id="trend-card">
       <div class="card-head">
         <div>
@@ -66,52 +77,89 @@
     </div>
     <div class="card">
       <h2>Powertrain mix</h2>
-      <p class="card-sub" id="mix-sub">Share of new registrations, latest period</p>
+      <p class="card-sub" id="mix-sub">Share of new registrations, latest quarter</p>
       <div id="mix-chart" class="donut-wrap"></div>
     </div>
   </section>
 
-  <!-- Province breakdown -->
+  <!-- Province + vehicle type -->
+  <section class="grid cols-2b">
+    <div class="card">
+      <h2>By province</h2>
+      <p class="card-sub" id="prov-sub">...</p>
+      <div class="barlist" id="prov-bars"></div>
+    </div>
+    <div class="card">
+      <h2>By vehicle type</h2>
+      <p class="card-sub" id="vt-sub">...</p>
+      <div class="barlist wide" id="vt-bars"></div>
+      <div class="note caveat">Light vehicles only. Statistics Canada splits passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans. Medium and heavy trucks and buses are not in that table.</div>
+    </div>
+  </section>
+
+  <!-- Brands -->
   <section class="card full">
-    <h2>EV registrations by province</h2>
-    <p class="card-sub" id="prov-sub">...</p>
-    <div class="barlist" id="prov-bars"></div>
+    <h2>By brand</h2>
+    <p class="card-sub" id="brand-sub">...</p>
+    <div class="barlist" id="brand-bars"></div>
+    <div class="note caveat" id="brand-caveat" hidden></div>
   </section>
 
-  <!-- Vehicle type breakdown (light vehicles only) -->
-  <section class="card full">
-    <h2>EV registrations by vehicle type</h2>
-    <p class="card-sub" id="vt-sub">...</p>
-    <div class="barlist wide" id="vt-bars"></div>
-    <div class="note caveat">Light vehicles only. Statistics Canada's registration table splits passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans. Medium and heavy trucks and buses are not in that table.</div>
+  <!-- Current brand shares (attributed, hand-curated) -->
+  <section class="card full" id="shares-card" hidden>
+    <div class="card-head">
+      <div>
+        <h2>Current brand shares</h2>
+        <p class="card-sub" id="shares-sub">...</p>
+      </div>
+      <span class="pill" id="shares-asof">...</span>
+    </div>
+    <div class="sharelist" id="shares-list"></div>
+    <p class="muted small" id="shares-context"></p>
+    <div class="note caveat" id="shares-note"></div>
   </section>
 
-  <!-- About: independence, data, disclaimer -->
-  <section class="card sources" id="about">
-    <h2>About this dashboard</h2>
-    <ul class="bullets">
-      <li><strong>Independent.</strong> A personal project. Not affiliated with, sponsored by, or endorsed by any employer, past or present, or by any data provider.</li>
-      <li><strong>Public data only.</strong> Every number comes from the sources listed below. Every panel names its source and access date. Nothing here is internal or proprietary.</li>
-      <li><strong>Not advice.</strong> This page is for general information. It is not financial, investment, or purchasing advice.</li>
-      <li><strong>Accuracy.</strong> Figures are reproduced as published. Statistics Canada revises data, and timing and definitions differ between series. Read the note on each panel before you quote a number.</li>
-      <li><strong>Open source.</strong> Code and pipeline: <a href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">github.com/dvaladares/ev-canada-dashboard</a> (MIT licence). Found an error? Open an issue.</li>
-    </ul>
+</div>
+
+<div class="pane" data-pane="about" id="about">
+
+  <section class="card about-card">
+    <p class="eyebrow">About this page</p>
+    <h1 class="about-title">Hi, I am Daniel.</h1>
+    <div class="prose">
+      <p>This is a spare-time project. I like EVs, I like charts, and I like vibe coding after the kids are in bed. Everything on this page comes from public data, mostly Statistics Canada and Transport Canada, pulled by a small script that runs every morning and publishes itself.</p>
+      <p><strong>Please do not use these numbers for planning, buying, investing, or anything that matters.</strong> Go to the sources. They are linked below, with the date each one was pulled. Statistics Canada revises data, the series use different definitions, and I am one person checking the output between other things.</p>
+      <p>What I do promise: every panel says where its numbers come from and what they leave out. No scraping of licensed data. No internal or proprietary information of any kind. This is independent work, not connected to any employer, past or present, or to any data provider.</p>
+      <p>The code is open source under the MIT licence: <a href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">github.com/dvaladares/ev-canada-dashboard</a>. If you spot an error, open an issue. I will fix it when I can.</p>
+    </div>
   </section>
 
-  <!-- Sources / methodology -->
   <section class="card sources">
-    <h2>Sources &amp; methodology</h2>
+    <h2>Sources and method</h2>
     <div id="sources-list"></div>
     <div id="methodology" class="methodology"></div>
   </section>
 
-  <footer class="foot">
-    <p>Built and maintained as a personal project by Daniel Valadares. Data: Statistics Canada Open Licence and Transport Canada Open Government Licence. Code: MIT.<br />
-    This page updates itself. Data is fetched on a schedule and the page re-renders with the latest published figures.<br />
-    Generated <span id="gen-time">...</span> | auto-refresh checks every <span id="poll-mins">...</span> min while open.</p>
-  </footer>
+  <section class="card">
+    <h2>Licences</h2>
+    <ul class="bullets">
+      <li>Code: MIT licence.</li>
+      <li>Statistics Canada tables: Statistics Canada Open Licence.</li>
+      <li>Transport Canada iZEV dataset: Open Government Licence, Canada.</li>
+      <li>S&amp;P Global Mobility figures: quoted with attribution as reported publicly. Not redistributed as a dataset.</li>
+    </ul>
+  </section>
 
 </div>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>EV Canada Dashboard is a personal project by Daniel Valadares. Public data only. Not advice. Not affiliated with any employer or data provider.</p>
+    <p class="tiny">Generated <span id="gen-time">...</span> | an open tab re-checks the data every <span id="poll-mins">...</span> min.</p>
+  </div>
+</footer>
 
 <!-- Embedded data snapshot: regenerated on every update by fetch_data.py. Do not hand-edit. -->
 <script id="ev-data" type="application/json">

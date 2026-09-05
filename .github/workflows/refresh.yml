@@ -28,6 +28,7 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add site/data/ev_sales.json site/index.html
             git commit -m "Data refresh: $(date -u +%Y-%m-%d)" -m "Automated by .github/workflows/refresh.yml. Sources: Statistics Canada, Transport Canada iZEV."
+            git pull --rebase origin main
             git push
           else
             git checkout -- site/data/ev_sales.json site/index.html

@@ -13,7 +13,7 @@ from pathlib import Path
 
 PROJ = Path(__file__).resolve().parent.parent
 PATH = "site/data/ev_sales.json"
-VOLATILE = ("generated_at", "subtitle", "sources")
+VOLATILE = ("generated_at", "subtitle", "sources", "build")
 
 
 def norm(d):
