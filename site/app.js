@@ -141,9 +141,36 @@
     }));
   }
 
+  // ---- data status pillboxes ----
+  function statusPill(cls, chip, name, desc, period, updated) {
+    return '<div class="spill ' + cls + '"><span class="chip"><i></i>' + esc(chip) + '</span>' +
+      '<div class="sname">' + esc(name) + '</div><div class="sdesc">' + esc(desc) + '</div>' +
+      '<div class="speriod">' + esc(period || "n/a") + '</div>' +
+      '<div class="supd">Updated <b>' + esc(updated ? friendlyDate(updated) : "n/a") + '</b></div></div>';
+  }
+  function renderStatus(d) {
+    var host = document.getElementById("status");
+    if (!host) return;
+    var src = d.sources || [];
+    function acc(i) { return src[i] && src[i].accessed; }
+    var t = d.totals || {};
+    var b = d.build || {};
+    var cs = d.current_brand_shares || {};
+    var izevFetched = b.izev_fetched ? String(b.izev_fetched).slice(0, 10) : acc(2);
+    host.innerHTML =
+      statusPill("live", "Live, automated", "Statistics Canada", "Quarterly registrations, table 20-10-0025",
+        (d.latest_period && d.latest_period.label) || t.period_label, acc(0)) +
+      statusPill("live", "Live, automated", "Statistics Canada", "Monthly sales, table 20-10-0085",
+        t.latest_month && t.latest_month.label, acc(1)) +
+      statusPill("hist", "Historical", "Transport Canada", "iZEV incentive claims by brand (program ended Mar 2025)",
+        b.izev_fy || "n/a", izevFetched) +
+      statusPill("curated", "Hand-curated", "S&P Global Mobility", "Brand shares as reported publicly; quoted, not scraped",
+        cs.as_of, cs.reviewed);
+  }
+
   function renderProvinces(d) {
     document.getElementById("prov-sub").textContent =
-      (d.totals && d.totals.period_label ? d.totals.period_label + " | " : "") + "ZEV registrations, Statistics Canada";
+      (d.totals && d.totals.period_label ? d.totals.period_label + " | " : "") + "ZEV registrations, Statistics Canada. Percent = ZEV share of that province's new registrations.";
     renderBars("prov-bars", (d.by_province_latest || []).map(function (p) {
       return { name: p.province, value: p.zev, share: p.share_pct };
     }), { alt: true });
@@ -381,6 +408,7 @@
     if (!d) return;
     renderHeader(d);
     renderKpis(d);
+    renderStatus(d);
     renderBrands(d);
     renderCurrentShares(d);
     renderMix(d);
@@ -389,6 +417,20 @@
     renderVehicleTypes(d);
     renderSources(d);
   }
+
+  // ===== tabs =====
+  function showTab(name) {
+    [].forEach.call(document.querySelectorAll(".tab"), function (t) { t.classList.toggle("on", t.getAttribute("data-tab") === name); });
+    [].forEach.call(document.querySelectorAll(".pane"), function (p) { p.classList.toggle("on", p.getAttribute("data-pane") === name); });
+    if (name === "about") { if (location.hash !== "#about") history.replaceState(null, "", "#about"); }
+    else if (location.hash === "#about") { history.replaceState(null, "", location.pathname); }
+    window.scrollTo({ top: 0 });
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-tab]");
+    if (b) { e.preventDefault(); showTab(b.getAttribute("data-tab")); }
+  });
+  if (location.hash === "#about") showTab("about");
 
   // ===== load + poll =====
   if (location.hash.replace("#", "") === "monthly") trendMode = "month";
