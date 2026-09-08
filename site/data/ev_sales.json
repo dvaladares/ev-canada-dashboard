@@ -1,18 +1,18 @@
 {
   "status": "ok",
-  "generated_at": "2026-09-05T11:08:18-04:00",
+  "generated_at": "2026-09-08T17:18:25+00:00",
   "subtitle": "Independent, public-data view of zero-emission vehicle registrations in Canada: totals, market share, trend, provinces, vehicle types, and brands.",
   "latest_period": {
-    "label": "Q1 2026",
+    "label": "Q2 2026",
     "type": "quarter"
   },
   "totals": {
-    "ev_registrations_latest": 43113,
-    "ev_share_pct_latest": 10.8,
-    "bev_latest": 29808,
-    "phev_latest": 13305,
-    "yoy_growth_pct": 15.8,
-    "period_label": "Q1 2026",
+    "ev_registrations_latest": 58811,
+    "ev_share_pct_latest": 10.7,
+    "bev_latest": 40585,
+    "phev_latest": 18226,
+    "yoy_growth_pct": 26.7,
+    "period_label": "Q2 2026",
     "latest_month": {
       "label": "Jun 2026",
       "zev": 21876,
@@ -22,39 +22,31 @@
   "powertrain_mix": [
     {
       "fuel_type": "Gasoline",
-      "count": 283361,
-      "share_pct": 71.3
+      "count": 375814,
+      "share_pct": 68.6
     },
     {
       "fuel_type": "Hybrid electric",
-      "count": 53584,
-      "share_pct": 13.5
+      "count": 91868,
+      "share_pct": 16.8
     },
     {
       "fuel_type": "Battery electric",
-      "count": 29808,
-      "share_pct": 7.5
+      "count": 40585,
+      "share_pct": 7.4
     },
     {
       "fuel_type": "Diesel",
-      "count": 17543,
-      "share_pct": 4.4
+      "count": 21180,
+      "share_pct": 3.9
     },
     {
       "fuel_type": "Plug-in hybrid",
-      "count": 13305,
+      "count": 18226,
       "share_pct": 3.3
     }
   ],
   "ev_trend_quarterly": [
-    {
-      "period": "Q2'23",
-      "ref_per": "2023-04-01",
-      "bev": 35633,
-      "phev": 12052,
-      "zev_total": 47685,
-      "zev_share_pct": 10.1
-    },
     {
       "period": "Q3'23",
       "ref_per": "2023-07-01",
@@ -142,6 +134,14 @@
       "phev": 13305,
       "zev_total": 43113,
       "zev_share_pct": 10.8
+    },
+    {
+      "period": "Q2'26",
+      "ref_per": "2026-04-01",
+      "bev": 40585,
+      "phev": 18226,
+      "zev_total": 58811,
+      "zev_share_pct": 10.7
     }
   ],
   "ev_trend_monthly": [
@@ -317,87 +317,87 @@
   "by_province_latest": [
     {
       "province": "Quebec",
-      "zev": 16420,
-      "share_pct": 17.6
+      "zev": 23701,
+      "share_pct": 17.8
     },
     {
       "province": "Ontario",
-      "zev": 12608,
+      "zev": 17142,
       "share_pct": 8.2
     },
     {
       "province": "British Columbia",
-      "zev": 8983,
-      "share_pct": 19.1
+      "zev": 11493,
+      "share_pct": 18.7
     },
     {
       "province": "Manitoba",
-      "zev": 960,
-      "share_pct": 7.7
+      "zev": 977,
+      "share_pct": 6.0
     },
     {
       "province": "Nova Scotia",
-      "zev": 508,
-      "share_pct": 5.4
+      "zev": 870,
+      "share_pct": 4.8
     },
     {
       "province": "New Brunswick",
-      "zev": 421,
-      "share_pct": 4.9
+      "zev": 677,
+      "share_pct": 5.3
     },
     {
       "province": "Saskatchewan",
-      "zev": 365,
-      "share_pct": 3.0
+      "zev": 416,
+      "share_pct": 2.6
     },
     {
       "province": "Prince Edward Island",
-      "zev": 100,
-      "share_pct": 7.5
+      "zev": 140,
+      "share_pct": 6.4
     },
     {
       "province": "Yukon",
-      "zev": 28,
-      "share_pct": 6.6
+      "zev": 19,
+      "share_pct": 2.7
     },
     {
       "province": "Northwest Territories",
-      "zev": 5,
-      "share_pct": 1.0
+      "zev": 7,
+      "share_pct": 1.3
     }
   ],
   "by_vehicle_type_latest": [
     {
       "vehicle_type": "Multi-purpose vehicles",
-      "zev": 34118,
-      "all": 256815,
-      "bev": 23648,
-      "phev": 10470,
-      "share_pct": 13.3
+      "zev": 43470,
+      "all": 340166,
+      "bev": 29192,
+      "phev": 14278,
+      "share_pct": 12.8
     },
     {
       "vehicle_type": "Passenger cars",
-      "zev": 6241,
-      "all": 45057,
-      "bev": 3545,
-      "phev": 2696,
-      "share_pct": 13.9
+      "zev": 13262,
+      "all": 76325,
+      "bev": 9335,
+      "phev": 3927,
+      "share_pct": 17.4
     },
     {
       "vehicle_type": "Pickup trucks",
-      "zev": 1635,
-      "all": 77743,
-      "bev": 1635,
+      "zev": 1243,
+      "all": 104973,
+      "bev": 1243,
       "phev": 0,
-      "share_pct": 2.1
+      "share_pct": 1.2
     },
     {
       "vehicle_type": "Vans",
-      "zev": 1119,
-      "all": 17986,
-      "bev": 980,
-      "phev": 139,
-      "share_pct": 6.2
+      "zev": 836,
+      "all": 26209,
+      "bev": 815,
+      "phev": 21,
+      "share_pct": 3.2
     }
   ],
   "by_brand": [
@@ -557,25 +557,25 @@
       "name": "Statistics Canada, Table 20-10-0025-01",
       "detail": "Quarterly ZEV, BEV and PHEV registrations by province and vehicle type. Powers the totals, market share, powertrain mix, trend, provincial and vehicle-type breakdowns.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501",
-      "accessed": "2026-09-05"
+      "accessed": "2026-09-08"
     },
     {
       "name": "Statistics Canada, Table 20-10-0085-01",
       "detail": "Monthly new-vehicle sales (zero-emission bucket). Powers the monthly trend view, the most timely series, through the latest reported month.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010008501",
-      "accessed": "2026-09-05"
+      "accessed": "2026-09-08"
     },
     {
       "name": "Transport Canada, iZEV Program (Open Canada)",
       "detail": "Incentivized BEV and PHEV claims by make (FY2024-25). Powers the by-brand chart. Incentivized and price-capped only; the program ended March 2025.",
       "url": "https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1",
-      "accessed": "2026-09-05"
+      "accessed": "2026-09-08"
     },
     {
       "name": "S&P Global Mobility (via GM Canada and trade press)",
       "detail": "Current brand shares (the 'Current brand shares' panel), cited with attribution and refreshed by hand. S&P data is licensed, so it is not scraped or republished as a dataset.",
       "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
-      "accessed": "2026-09-05"
+      "accessed": "2026-09-08"
     }
   ],
   "methodology": [
@@ -592,6 +592,6 @@
     "statcan_ok": true,
     "izev_fy": "FY2024-25",
     "izev_total": 196171,
-    "izev_fetched": "2026-09-05T11:08:18"
+    "izev_fetched": "2026-09-08T17:18:25"
   }
 }
