@@ -386,6 +386,14 @@
     }
   }
 
+  // Other public projects, linked from the About rail. Static on purpose.
+  var PROJECTS = [
+    { name: "token-sipping-mode", url: "https://github.com/dvaladares/token-sipping-mode",
+      desc: "A Claude Code skill: delegate the legwork, own the verdict. Budget discipline for long agent sessions." },
+    { name: "mac-disk-clean", url: "https://github.com/dvaladares/mac-disk-clean",
+      desc: "An LLM-guided Mac disk cleaner. Reclaim 50+ GB safely, no subscription." }
+  ];
+
   function renderAbout(d) {
     var host = document.getElementById("about-rail");
     if (!host) return;
@@ -405,7 +413,14 @@
       fact("Sources", fmt((d.sources || []).length), "public, linked, dated") +
       fact("Stack", "Python + JS", "standard library, no framework, no build step") +
       fact("Licence", "MIT", "use it, fork it, break it") +
-      '<a class="btn" href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">View the code on GitHub</a>';
+      '<a class="btn" href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">View the code on GitHub</a>' +
+      '<div class="projects"><p class="eyebrow">Other projects</p>' +
+      PROJECTS.map(function (p) {
+        return '<a class="proj" href="' + esc(p.url) + '" target="_blank" rel="noopener">' +
+          '<span class="pname">' + esc(p.name) + '</span><span class="pdesc">' + esc(p.desc) + '</span></a>';
+      }).join("") +
+      '<a class="proj more" href="https://github.com/dvaladares" target="_blank" rel="noopener"><span class="pname">All public code</span><span class="pdesc">github.com/dvaladares</span></a>' +
+      '</div>';
   }
 
   function render(d) {
