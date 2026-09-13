@@ -258,6 +258,12 @@ header.top { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(16
 .bullets li::marker { color: var(--accent); }
 .methodology { margin: 0; }
 
+/* Tooltip */
+.tip { position: fixed; z-index: 60; max-width: 280px; padding: 9px 12px; border-radius: 10px; background: var(--ink); color: var(--bg); font-size: 12.5px; line-height: 1.45; pointer-events: none; box-shadow: 0 10px 30px -10px rgba(0,0,0,.4); }
+[data-tip] { cursor: help; }
+.toggle button[data-tip], .badge[data-tip] { cursor: pointer; }
+.kpi[data-tip], .spill[data-tip], .bar-row[data-tip], .fact[data-tip] { cursor: default; }
+
 /* Footer */
 footer.foot { margin-top: 40px; padding: 26px 0 60px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 13px; text-align: center; }
 footer.foot p { margin: 4px 0; }
