@@ -149,13 +149,6 @@ header.top { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(16
 .bar-row .val small { color: var(--ink-soft); font-weight: 500; }
 .barlist.wide .bar-row { grid-template-columns: 190px 1fr auto; }
 
-/* Current brand shares tiles */
-.sharelist { display: grid; grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); gap: 12px; }
-.share-tile { border: 1px solid var(--line); border-radius: 14px; padding: 14px 15px; background: var(--card-2); }
-.share-tile .stier { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
-.share-tile .sval { font-family: var(--display); font-size: 26px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin: 4px 0 1px; }
-.share-tile .slabel { font-weight: 650; font-size: 13.5px; }
-.share-tile .snote { font-size: 12px; color: var(--ink-soft); margin-top: 3px; }
 .pill { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line); color: var(--ink-soft); white-space: nowrap; }
 
 /* Legend + charts */

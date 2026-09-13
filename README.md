@@ -19,7 +19,6 @@ Live site: https://ev-canada-dashboard.vercel.app (the About tab is at /#about)
 | By province | Which provinces lead, in units and in share | Statistics Canada 20-10-0025-01 |
 | By vehicle type | Passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers), vans | Statistics Canada 20-10-0025-01 |
 | By brand | Which makes sold the most incentivized EVs (historical) | Transport Canada iZEV program, Open Government Licence |
-| Current brand shares | The most recent published brand-share figures, quoted with attribution | S&P Global Mobility, as reported by GM Canada and trade press |
 
 "ZEV" means battery-electric (BEV) plus plug-in hybrid (PHEV). Conventional hybrids are
 counted separately.
@@ -31,9 +30,8 @@ counted separately.
   in it, so they are not on this page.
 - No free brand feed exists in Canada. The by-brand chart uses Transport Canada iZEV claims:
   incentivized, price-capped vehicles only, and the program ended March 31, 2025. It
-  understates premium brands and is a historical picture. The "Current brand shares" panel
-  quotes the latest S&P Global Mobility figures as reported publicly. S&P and DesRosiers
-  data is licensed and is never scraped or republished here.
+  understates premium brands and is a historical picture. Current brand-level data (S&P
+  Global Mobility, DesRosiers) is licensed and is not shown here.
 - Two Statistics Canada series feed the trend. Quarterly registrations and monthly sales are
   different series and will not tie out exactly.
 - Statistics Canada revises data and releases on an irregular cadence. The page shows what
@@ -60,7 +58,7 @@ changed, nothing is committed.
 ```
 Statistics Canada WDS API  --+
 Transport Canada iZEV CSV  --+--> fetch_data.py --> site/data/ev_sales.json
-S&P note (hand-curated)    --+                  --> snapshot embedded in site/index.html
+                                                --> snapshot embedded in site/index.html
                                                       |
 GitHub Actions (monthly) --> commit if changed --> push --> Vercel deploy
 ```
@@ -106,15 +104,9 @@ data/, logs/                   runtime cache and logs (gitignored)
 `status`, `generated_at`, `subtitle`, `latest_period`, `totals` (ev_registrations_latest,
 ev_share_pct_latest, bev_latest, phev_latest, yoy_growth_pct, period_label, latest_month),
 `powertrain_mix[]`, `ev_trend_quarterly[]`, `ev_trend_monthly[]`, `by_province_latest[]`,
-`by_vehicle_type_latest[]`, `by_brand[]`, `by_brand_meta`, `current_brand_shares`,
+`by_vehicle_type_latest[]`, `by_brand[]`, `by_brand_meta`,
 `sources[]`, `methodology[]`. The front end reads only this schema, so adding or swapping
 a source touches `fetch_data.py` alone.
-
-## Refreshing the hand-curated brand shares
-
-When a newer S&P-sourced brand figure is published (for example a GM Canada quarterly EV
-release), update `CURRENT_BRAND_SHARES` in `fetch_data.py`: `as_of`, `rows`, `reviewed`.
-Quote the reported figure with its attribution. Do not scrape licensed datasets.
 
 ## Contributing
 
