@@ -156,13 +156,17 @@
     var t = d.totals || {};
     var b = d.build || {};
     var izevFetched = b.izev_fetched ? String(b.izev_fetched).slice(0, 10) : acc(2);
+    var xc = null;
+    src.forEach(function (s) { if (/electric autonomy/i.test(s.name || "")) xc = s; });
     host.innerHTML =
       statusPill("live", "Live, automated", "Statistics Canada", "Quarterly registrations, table 20-10-0025",
         (d.latest_period && d.latest_period.label) || t.period_label, acc(0)) +
       statusPill("live", "Live, automated", "Statistics Canada", "Monthly sales, table 20-10-0085",
         t.latest_month && t.latest_month.label, acc(1)) +
       statusPill("hist", "Historical", "Transport Canada", "iZEV incentive claims by brand (program ended Mar 2025)",
-        b.izev_fy || "n/a", izevFetched);
+        b.izev_fy || "n/a", izevFetched) +
+      statusPill("xcheck", "Cross-check", "Electric Autonomy", "Independent report on the same StatCan release; cited, not scraped",
+        xc ? "Figures match" : "n/a", xc && xc.accessed);
   }
 
   function renderProvinces(d) {
@@ -350,26 +354,58 @@
     });
   }
 
+  function sourceKind(s) {
+    var n = (s.name || "").toLowerCase();
+    if (n.indexOf("electric autonomy") >= 0) return { cls: "xcheck", label: "Cross-check" };
+    if (n.indexOf("izev") >= 0) return { cls: "hist", label: "Historical" };
+    return { cls: "live", label: "Live" };
+  }
+
   function renderSources(d) {
     var host = document.getElementById("sources-list");
-    var srcLis = (d.sources || []).map(function (s) {
-      var link = s.url
+    host.innerHTML = (d.sources || []).map(function (s) {
+      var k = sourceKind(s);
+      var title = s.url
         ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.name) + "</a>"
-        : "<strong>" + esc(s.name) + "</strong>";
-      var detail = s.detail ? ". " + esc(s.detail) : "";
-      var acc = s.accessed ? ' <span class="muted">Accessed ' + esc(friendlyDate(s.accessed)) + ".</span>" : "";
-      return "<li>" + link + detail + acc + "</li>";
+        : esc(s.name);
+      return '<div class="src-card ' + k.cls + '">' +
+        '<div class="src-top"><span class="chip"><i></i>' + k.label + '</span>' +
+        (s.accessed ? '<span class="src-acc">Pulled ' + esc(friendlyDate(s.accessed)) + '</span>' : '') + '</div>' +
+        '<div class="src-name">' + title + '</div>' +
+        (s.detail ? '<div class="src-detail">' + esc(s.detail) + '</div>' : '') +
+        '</div>';
     }).join("");
-    host.innerHTML = '<h3 class="section-label">Sources</h3><ul class="src-list">' + srcLis + "</ul>";
 
     var meth = document.getElementById("methodology");
     var m = d.methodology;
     if (Array.isArray(m)) {
-      meth.innerHTML = '<h3 class="section-label">How it&#39;s measured</h3><ul class="bullets">' +
-        m.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+      meth.innerHTML = '<ol class="method-list">' +
+        m.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol>";
     } else {
       meth.innerHTML = m ? esc(m).replace(/\n/g, "<br />") : "";
     }
+  }
+
+  function renderAbout(d) {
+    var host = document.getElementById("about-rail");
+    if (!host) return;
+    var t = d.totals || {};
+    var lm = t.latest_month || {};
+    var when = d.generated_at ? friendlyDate(String(d.generated_at).slice(0, 10)) : "n/a";
+    function fact(label, value, sub) {
+      return '<div class="fact"><div class="flabel">' + esc(label) + '</div>' +
+        '<div class="fvalue">' + value + '</div>' +
+        (sub ? '<div class="fsub">' + esc(sub) + '</div>' : '') + '</div>';
+    }
+    host.innerHTML =
+      '<p class="eyebrow">At a glance</p>' +
+      fact("Latest quarter", esc(t.period_label || "n/a"), fmt(t.ev_registrations_latest) + " ZEVs, " + pct(t.ev_share_pct_latest) + " share") +
+      fact("Latest month", esc(lm.label || "n/a"), lm.zev != null ? fmt(lm.zev) + " ZEVs, " + pct(lm.share_pct) + " share" : "") +
+      fact("Refresh", "Monthly", "15th of each month, automated. Last run " + when + ".") +
+      fact("Sources", fmt((d.sources || []).length), "public, linked, dated") +
+      fact("Stack", "Python + JS", "standard library, no framework, no build step") +
+      fact("Licence", "MIT", "use it, fork it, break it") +
+      '<a class="btn" href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">View the code on GitHub</a>';
   }
 
   function render(d) {
@@ -383,6 +419,7 @@
     renderProvinces(d);
     renderVehicleTypes(d);
     renderSources(d);
+    renderAbout(d);
   }
 
   // ===== tabs =====

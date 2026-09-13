@@ -110,30 +110,43 @@
 <div class="pane" data-pane="about" id="about">
 
   <section class="card about-card">
-    <p class="eyebrow">About this page</p>
-    <h1 class="about-title">Hi, I am Daniel.</h1>
-    <div class="prose">
-      <p>This is a spare-time project. I like EVs, I like charts, and I like vibe coding after the kids are in bed. Everything on this page comes from public data, mostly Statistics Canada and Transport Canada, pulled by a small script that runs every morning and publishes itself.</p>
-      <p><strong>Please do not use these numbers for planning, buying, investing, or anything that matters.</strong> Go to the sources. They are linked below, with the date each one was pulled. Statistics Canada revises data, the series use different definitions, and I am one person checking the output between other things.</p>
-      <p>What I do promise: every panel says where its numbers come from and what they leave out. No scraping of licensed data. No internal or proprietary information of any kind. This is independent work, not connected to any employer, past or present, or to any data provider.</p>
-      <p>The code is open source under the MIT licence: <a href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">github.com/dvaladares/ev-canada-dashboard</a>. If you spot an error, open an issue. I will fix it when I can.</p>
+    <div class="about-grid">
+      <div class="about-main">
+        <p class="eyebrow">About this page</p>
+        <h1 class="about-title">Hi, I am Daniel.</h1>
+        <div class="prose">
+          <p>This is a spare-time project. I like EVs, I like charts, and I like vibe coding after the kids are in bed. Everything on this page comes from public data, mostly Statistics Canada and Transport Canada, pulled by a small script that runs on the 15th of each month and publishes itself.</p>
+          <p><strong>Please do not use these numbers for planning, buying, investing, or anything that matters.</strong> Go to the sources. They are linked below, with the date each one was pulled. Statistics Canada revises data, the series use different definitions, and I am one person checking the output between other things.</p>
+          <p>What I do promise: every panel says where its numbers come from and what they leave out. No scraping of licensed data. No internal or proprietary information of any kind. This is independent work, not connected to any employer, past or present, or to any data provider.</p>
+          <p>The code is open source under the MIT licence: <a href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">github.com/dvaladares/ev-canada-dashboard</a>. If you spot an error, open an issue.</p>
+        </div>
+      </div>
+      <aside class="about-rail" id="about-rail" aria-label="At a glance"><!-- rendered by app.js --></aside>
     </div>
   </section>
 
-  <section class="card sources">
-    <h2>Sources and method</h2>
-    <div id="sources-list"></div>
-    <div id="methodology" class="methodology"></div>
-  </section>
-
-  <section class="card">
-    <h2>Licences</h2>
-    <ul class="bullets">
-      <li>Code: MIT licence.</li>
-      <li>Statistics Canada tables: Statistics Canada Open Licence.</li>
-      <li>Transport Canada iZEV dataset: Open Government Licence, Canada.</li>
-      <li>S&amp;P Global Mobility figures: quoted with attribution as reported publicly. Not redistributed as a dataset.</li>
-    </ul>
+  <section class="grid cols-about">
+    <div class="card sources">
+      <h2>Sources</h2>
+      <p class="card-sub">Every number on the dashboard traces back to one of these. The date is when the script last pulled it.</p>
+      <div id="sources-list" class="src-grid"></div>
+    </div>
+    <div class="about-side">
+      <div class="card">
+        <h2>How it is measured</h2>
+        <p class="card-sub">Definitions and limits, in plain words.</p>
+        <div id="methodology" class="methodology"></div>
+      </div>
+      <div class="card">
+        <h2>Licences</h2>
+        <ul class="bullets">
+          <li>Code: MIT licence.</li>
+          <li>Statistics Canada tables: Statistics Canada Open Licence.</li>
+          <li>Transport Canada iZEV dataset: Open Government Licence, Canada.</li>
+          <li>Electric Autonomy Canada: cited as a cross-check only. Nothing is copied from their site.</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
 </div>
@@ -143,7 +156,8 @@
 <footer class="foot">
   <div class="wrap">
     <p>EV Canada Dashboard is a personal project by Daniel Valadares. Public data only. Not advice. Not affiliated with any employer or data provider.</p>
-    <p class="tiny">Generated <span id="gen-time">...</span> | an open tab re-checks the data every <span id="poll-mins">...</span> min.</p>
+    <p class="foot-links"><button type="button" class="linklike" data-tab="about">About and sources</button><span class="sep">|</span><a href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">Source code on GitHub</a><span class="sep">|</span><a href="https://github.com/dvaladares/ev-canada-dashboard/issues" target="_blank" rel="noopener">Report an error</a></p>
+    <p class="tiny">Generated <span id="gen-time">...</span>. An open tab re-checks the data every <span id="poll-mins">...</span> min.</p>
   </div>
 </footer>
 
