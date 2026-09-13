@@ -96,7 +96,7 @@
       host.appendChild(el("p", { class: "muted" }, "No data available for this section yet."));
       return;
     }
-    var max = Math.max.apply(null, rows.map(function (r) { return r.value || 0; })) || 1;
+    var max = opts.max || Math.max.apply(null, rows.map(function (r) { return r.value || 0; })) || 1;
     rows.forEach(function (r) {
       var row = el("div", { class: "bar-row" });
       row.appendChild(el("div", { class: "name", title: r.name }, esc(r.name)));
@@ -115,17 +115,41 @@
     });
   }
 
+  var BRAND_LIMIT = 12;
+  var brandSort = "az";      // "az" (default, neutral) or "units"
+  var brandShowAll = false;
+
   function renderBrands(d) {
     var sub = document.getElementById("brand-sub");
     var m = d.by_brand_meta || {};
+    var all = (d.by_brand || []).map(function (b) {
+      return { name: b.brand, value: b.units, share: b.share_pct };
+    });
     var bits = [];
     if (m.metric) bits.push(esc(m.metric));
     if (m.period) bits.push(esc(m.period));
+    if (all.length) bits.push(fmt(all.length) + " brands");
     if (m.source) bits.push("Source: " + esc(m.source));
     sub.innerHTML = bits.join(" | ") || "n/a";
-    renderBars("brand-bars", (d.by_brand || []).map(function (b) {
-      return { name: b.brand, value: b.units, share: b.share_pct };
-    }));
+
+    var rows = all.slice();
+    if (brandSort === "units") rows.sort(function (a, b) { return (b.value || 0) - (a.value || 0); });
+    else rows.sort(function (a, b) { return a.name.localeCompare(b.name, "en"); });
+    var max = Math.max.apply(null, all.map(function (r) { return r.value || 0; })) || 1;
+    var shown = brandShowAll ? rows : rows.slice(0, BRAND_LIMIT);
+    renderBars("brand-bars", shown, { max: max });
+
+    var more = document.getElementById("brand-more");
+    if (more) {
+      if (all.length > BRAND_LIMIT) {
+        more.hidden = false;
+        more.textContent = brandShowAll ? "Show fewer" : "Show all " + all.length + " brands";
+      } else more.hidden = true;
+    }
+    [].forEach.call(document.querySelectorAll("#brand-toggle button"), function (b) {
+      b.classList.toggle("on", b.getAttribute("data-sort") === brandSort);
+    });
+
     var caveat = document.getElementById("brand-caveat");
     if (m.credibility_note) { caveat.hidden = false; caveat.innerHTML = "Note: " + esc(m.credibility_note); }
     else caveat.hidden = true;
@@ -464,6 +488,22 @@
       if (!btn || btn.disabled) return;
       trendMode = btn.getAttribute("data-mode");
       if (current) renderTrendCard(current);
+    });
+  }
+  var brandToggle = document.getElementById("brand-toggle");
+  if (brandToggle) {
+    brandToggle.addEventListener("click", function (e) {
+      var btn = e.target.closest("button[data-sort]");
+      if (!btn) return;
+      brandSort = btn.getAttribute("data-sort");
+      if (current) renderBrands(current);
+    });
+  }
+  var brandMore = document.getElementById("brand-more");
+  if (brandMore) {
+    brandMore.addEventListener("click", function () {
+      brandShowAll = !brandShowAll;
+      if (current) renderBrands(current);
     });
   }
   window.addEventListener("hashchange", function () {
