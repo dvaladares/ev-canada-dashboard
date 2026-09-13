@@ -191,6 +191,13 @@ header.top { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(16
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; padding: 11px 16px; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 700; font-size: 13.5px; text-decoration: none; transition: transform .15s, filter .15s; }
 .btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
 .btn::after { content: "\2197"; font-family: var(--mono); font-size: 13px; }
+.projects { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.projects .eyebrow { margin-bottom: 2px; }
+.proj { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); text-decoration: none; color: var(--ink); transition: border-color .15s, transform .15s; }
+.proj:hover { border-color: var(--accent); transform: translateY(-1px); }
+.proj .pname { font-family: var(--mono); font-weight: 600; font-size: 12.5px; color: var(--accent-ink); }
+.proj .pdesc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.45; }
+.proj.more .pname { color: var(--ink); }
 
 .cols-about { grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr); margin-top: 14px; }
 .about-side { display: grid; gap: 14px; align-content: start; }
