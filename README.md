@@ -49,8 +49,10 @@ error? Open an issue.
 
 ## How it updates itself
 
-A GitHub Actions workflow (`.github/workflows/refresh.yml`) runs `fetch_data.py` every day
-at 13:30 UTC (09:30 Eastern, one hour after Statistics Canada's 08:30 release). If the
+A GitHub Actions workflow (`.github/workflows/refresh.yml`) runs `fetch_data.py` on the 15th of
+each month at 13:30 UTC (09:30 Eastern). Statistics Canada publishes monthly sales around
+mid-month and quarterly registrations about ten weeks after quarter end, so one monthly run
+catches both. You can also trigger it by hand from the Actions tab. If the
 figures changed, it commits `site/data/ev_sales.json` and the snapshot embedded in
 `site/index.html` and pushes to `main`. Vercel deploys on push. If only the timestamp
 changed, nothing is committed.
@@ -60,7 +62,7 @@ Statistics Canada WDS API  --+
 Transport Canada iZEV CSV  --+--> fetch_data.py --> site/data/ev_sales.json
 S&P note (hand-curated)    --+                  --> snapshot embedded in site/index.html
                                                       |
-GitHub Actions (daily) --> commit if changed --> push --> Vercel deploy
+GitHub Actions (monthly) --> commit if changed --> push --> Vercel deploy
 ```
 
 An open browser tab re-checks `data/ev_sales.json` every 60 minutes and re-renders if the
@@ -95,7 +97,7 @@ site/data/ev_sales.json        generated: the live data the page reads
 scripts/data_changed.py        exit 0 when the figures changed vs HEAD (used by CI)
 scripts/run_update.sh          local refresh, optional manual publish
 scripts/install.sh, uninstall.sh, serve.sh   optional macOS launchd mode
-.github/workflows/refresh.yml  the daily self-update
+.github/workflows/refresh.yml  the monthly self-update
 data/, logs/                   runtime cache and logs (gitignored)
 ```
 

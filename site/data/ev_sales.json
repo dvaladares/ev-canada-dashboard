@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-09-08T17:18:25+00:00",
+  "generated_at": "2026-09-13T12:06:49-04:00",
   "subtitle": "Independent, public-data view of zero-emission vehicle registrations in Canada: totals, market share, trend, provinces, vehicle types, and brands.",
   "latest_period": {
     "label": "Q2 2026",
@@ -557,25 +557,31 @@
       "name": "Statistics Canada, Table 20-10-0025-01",
       "detail": "Quarterly ZEV, BEV and PHEV registrations by province and vehicle type. Powers the totals, market share, powertrain mix, trend, provincial and vehicle-type breakdowns.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501",
-      "accessed": "2026-09-08"
+      "accessed": "2026-09-13"
     },
     {
       "name": "Statistics Canada, Table 20-10-0085-01",
       "detail": "Monthly new-vehicle sales (zero-emission bucket). Powers the monthly trend view, the most timely series, through the latest reported month.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010008501",
-      "accessed": "2026-09-08"
+      "accessed": "2026-09-13"
     },
     {
       "name": "Transport Canada, iZEV Program (Open Canada)",
       "detail": "Incentivized BEV and PHEV claims by make (FY2024-25). Powers the by-brand chart. Incentivized and price-capped only; the program ended March 2025.",
       "url": "https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1",
-      "accessed": "2026-09-08"
+      "accessed": "2026-09-13"
     },
     {
       "name": "S&P Global Mobility (via GM Canada and trade press)",
       "detail": "Current brand shares (the 'Current brand shares' panel), cited with attribution and refreshed by hand. S&P data is licensed, so it is not scraped or republished as a dataset.",
       "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
-      "accessed": "2026-09-08"
+      "accessed": "2026-09-13"
+    },
+    {
+      "name": "Electric Autonomy Canada, EV sales data tracker",
+      "detail": "Independent cross-check, not a data feed. Their Q2 2026 report (Neil Vorano, September 9, 2026) matches this dashboard on every shared figure: 58,811 ZEVs, 10.7% share, BEV 7.4%, PHEV 3.3%, BC 18.7%, Quebec 17.8%, Ontario 8.2%.",
+      "url": "https://electricautonomy.ca/data-trackers/ev-sales-data/2026-09-09/zev-10-7-per-cent-for-q2-statscan/",
+      "accessed": "2026-09-13"
     }
   ],
   "methodology": [
@@ -585,6 +591,7 @@
     "The by-brand chart uses Transport Canada's iZEV data, the only free Canadian source with a vehicle-make breakdown. It covers incentivized, price-capped vehicles only, and the program ended March 2025, so it understates premium brands and is a historical snapshot.",
     "Current brand shares come from S&P Global Mobility (reported via GM Canada and trade press), cited with attribution and refreshed by hand. Complete, current brand-level data in Canada sits behind paid S&P or DesRosiers licences that do not allow republishing.",
     "The vehicle-type panel splits ZEV registrations into passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans, from the same Statistics Canada registration table. Medium and heavy trucks and buses are not in that table, so this dashboard covers light vehicles only.",
+    "Headline figures are cross-checked by hand against Electric Autonomy Canada's EV sales data tracker, which reports the same Statistics Canada release. Their reporting is credited in the sources list; nothing is scraped from their site.",
     "Every figure on this page is labelled with its source."
   ],
   "notes": [],
@@ -592,6 +599,6 @@
     "statcan_ok": true,
     "izev_fy": "FY2024-25",
     "izev_total": 196171,
-    "izev_fetched": "2026-09-08T17:18:25"
+    "izev_fetched": "2026-09-13T12:06:49"
   }
 }

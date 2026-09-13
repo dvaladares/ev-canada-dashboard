@@ -594,6 +594,14 @@ def assemble(statcan, monthly, izev, prev):
                 "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
                 "accessed": TODAY,
             },
+            {
+                "name": "Electric Autonomy Canada, EV sales data tracker",
+                "detail": "Independent cross-check, not a data feed. Their Q2 2026 report (Neil Vorano, "
+                          "September 9, 2026) matches this dashboard on every shared figure: 58,811 ZEVs, "
+                          "10.7% share, BEV 7.4%, PHEV 3.3%, BC 18.7%, Quebec 17.8%, Ontario 8.2%.",
+                "url": "https://electricautonomy.ca/data-trackers/ev-sales-data/2026-09-09/zev-10-7-per-cent-for-q2-statscan/",
+                "accessed": "2026-09-13",
+            },
         ],
         "methodology": [
             "\"ZEV\" means battery-electric (BEV) plus plug-in hybrid (PHEV). Conventional hybrids "
@@ -614,6 +622,9 @@ def assemble(statcan, monthly, izev, prev):
             "multi-purpose vehicles (SUVs and crossovers) and vans, from the same Statistics Canada "
             "registration table. Medium and heavy trucks and buses are not in that table, so this "
             "dashboard covers light vehicles only.",
+            "Headline figures are cross-checked by hand against Electric Autonomy Canada's EV sales "
+            "data tracker, which reports the same Statistics Canada release. Their reporting is "
+            "credited in the sources list; nothing is scraped from their site.",
             "Every figure on this page is labelled with its source.",
         ],
         "notes": [],

@@ -2,7 +2,9 @@ name: Refresh data
 
 on:
   schedule:
-    - cron: "30 13 * * *"
+    # 15th of each month, 13:30 UTC. StatCan monthly sales land mid-month;
+    # quarterly registrations land about 10 weeks after quarter end.
+    - cron: "30 13 15 * *"
   workflow_dispatch:
 
 permissions:
