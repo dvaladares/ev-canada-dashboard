@@ -59,7 +59,7 @@
     <div class="status" id="status"><!-- rendered by app.js --></div>
   </section>
 
-  <!-- Trend + mix -->
+  <!-- Trend + mix + vehicle type -->
   <section class="grid cols-2">
     <div class="card" id="trend-card">
       <div class="card-head">
@@ -82,35 +82,35 @@
     </div>
   </section>
 
-  <!-- Province + vehicle type -->
-  <section class="grid cols-2b">
-    <div class="card">
-      <h2>By province</h2>
-      <p class="card-sub" id="prov-sub">...</p>
-      <div class="barlist" id="prov-bars"></div>
-    </div>
-    <div class="card">
-      <h2>By vehicle type</h2>
-      <p class="card-sub" id="vt-sub">...</p>
-      <div class="barlist wide" id="vt-bars"></div>
-      <div class="note caveat">Light vehicles only. Statistics Canada splits passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans. Medium and heavy trucks and buses are not in that table.</div>
-    </div>
-  </section>
-
-  <!-- Brands -->
-  <section class="card full">
-    <div class="card-head">
-      <div>
-        <h2>By brand</h2>
-        <p class="card-sub" id="brand-sub">...</p>
+  <!-- Province + brands -->
+  <section class="grid cols-2c">
+    <div class="stack">
+      <div class="card">
+        <h2>By province</h2>
+        <p class="card-sub" id="prov-sub">...</p>
+        <div class="barlist" id="prov-bars"></div>
       </div>
-      <div class="toggle" id="brand-toggle" role="group" aria-label="Brand order">
-        <button type="button" data-sort="az" class="on">A to Z</button>
-        <button type="button" data-sort="units">By units</button>
+      <div class="card">
+        <h2>By vehicle type</h2>
+        <p class="card-sub" id="vt-sub">...</p>
+        <div class="barlist wide" id="vt-bars"></div>
+        <div class="note caveat">Light vehicles only. Statistics Canada splits passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans. Medium and heavy trucks and buses are not in that table.</div>
       </div>
     </div>
-    <div class="barlist" id="brand-bars"></div>
-    <div class="note caveat" id="brand-caveat" hidden></div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h2>By brand</h2>
+          <p class="card-sub" id="brand-sub">...</p>
+        </div>
+        <div class="toggle" id="brand-toggle" role="group" aria-label="Brand order">
+          <button type="button" data-sort="az" class="on">A to Z</button>
+          <button type="button" data-sort="units">By units</button>
+        </div>
+      </div>
+      <div class="barlist twocol" id="brand-bars"></div>
+      <div class="note caveat" id="brand-caveat" hidden></div>
+    </div>
   </section>
 
 </div>
