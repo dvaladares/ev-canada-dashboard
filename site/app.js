@@ -115,13 +115,112 @@
     });
   }
 
-  var brandSort = "az";      // "az" (default, neutral) or "units"
+  var brandView = "tiles";   // "tiles" (treemap) or "list" (A to Z bars)
+
+  // squarified treemap: items [{name, value, ...}] into box {x,y,w,h}
+  function squarify(items, box) {
+    var out = [];
+    var total = items.reduce(function (s, i) { return s + i.value; }, 0) || 1;
+    var scale = (box.w * box.h) / total;
+    var rest = items.slice().sort(function (a, b) { return b.value - a.value; })
+      .map(function (i) { return { item: i, area: i.value * scale }; });
+    var x = box.x, y = box.y, w = box.w, h = box.h;
+    function worst(row, side) {
+      var s = row.reduce(function (t, r) { return t + r.area; }, 0);
+      var mx = Math.max.apply(null, row.map(function (r) { return r.area; }));
+      var mn = Math.min.apply(null, row.map(function (r) { return r.area; }));
+      return Math.max((side * side * mx) / (s * s), (s * s) / (side * side * mn));
+    }
+    function layout(row, side, vertical) {
+      var s = row.reduce(function (t, r) { return t + r.area; }, 0);
+      var thick = s / side;
+      var off = 0;
+      row.forEach(function (r) {
+        var len = r.area / thick;
+        out.push(vertical
+          ? { item: r.item, x: x, y: y + off, w: thick, h: len }
+          : { item: r.item, x: x + off, y: y, w: len, h: thick });
+        off += len;
+      });
+      if (vertical) { x += thick; w -= thick; } else { y += thick; h -= thick; }
+    }
+    var row = [];
+    while (rest.length) {
+      var vertical = w >= h;
+      var side = vertical ? h : w;
+      var next = rest[0];
+      if (!row.length || worst(row.concat([next]), side) <= worst(row, side)) { row.push(rest.shift()); }
+      else { layout(row, side, vertical); row = []; }
+    }
+    if (row.length) layout(row, w >= h ? h : w, w >= h);
+    return out;
+  }
+
+  function bevShade(bevFrac) {
+    // all-BEV = charge green, all-PHEV = grid blue, mixed in between
+    var g = [14, 159, 110], b = [37, 99, 235];
+    var t = isNaN(bevFrac) ? 0.5 : bevFrac;
+    var c = g.map(function (v, i) { return Math.round(b[i] + (v - b[i]) * t); });
+    return "rgb(" + c.join(",") + ")";
+  }
+
+  function renderTreemap(hostId, items) {
+    var host = document.getElementById(hostId);
+    host.innerHTML = "";
+    var W = 1000, H = 420;
+    var svgNS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("class", "treemap");
+    var tiles = squarify(items.filter(function (i) { return i.value > 0; }), { x: 0, y: 0, w: W, h: H });
+    var total = items.reduce(function (s, i) { return s + i.value; }, 0) || 1;
+    tiles.forEach(function (t) {
+      var g = document.createElementNS(svgNS, "g");
+      var r = document.createElementNS(svgNS, "rect");
+      var pad = 1.5;
+      r.setAttribute("x", t.x + pad); r.setAttribute("y", t.y + pad);
+      r.setAttribute("width", Math.max(0, t.w - pad * 2)); r.setAttribute("height", Math.max(0, t.h - pad * 2));
+      r.setAttribute("rx", 6);
+      r.setAttribute("fill", bevShade(t.item.bevFrac));
+      var tt = document.createElementNS(svgNS, "title");
+      tt.textContent = t.item.name + ": " + fmt(t.item.value) + " claims (" + pct((t.item.value / total) * 100) + ")" +
+        (t.item.bev != null ? " | BEV " + fmt(t.item.bev) + ", PHEV " + fmt(t.item.phev) : "");
+      g.appendChild(r); g.appendChild(tt);
+      var big = t.w > 92 && t.h > 40;
+      var mid = t.w > 56 && t.h > 26;
+      if (big || mid) {
+        var tx = document.createElementNS(svgNS, "text");
+        tx.setAttribute("x", t.x + 9); tx.setAttribute("y", t.y + (big ? 22 : 18));
+        tx.setAttribute("class", "tlabel");
+        tx.setAttribute("style", "font-size:" + (big ? 14 : 11) + "px");
+        tx.textContent = t.item.name;
+        g.appendChild(tx);
+        if (big) {
+          var tv = document.createElementNS(svgNS, "text");
+          tv.setAttribute("x", t.x + 9); tv.setAttribute("y", t.y + 40);
+          tv.setAttribute("class", "tval");
+          tv.textContent = fmt(t.item.value) + " | " + pct((t.item.value / total) * 100);
+          g.appendChild(tv);
+        }
+      }
+      svg.appendChild(g);
+    });
+    host.appendChild(svg);
+    var key = el("div", { class: "map-key" });
+    key.innerHTML = '<span><i style="background:' + bevShade(1) + '"></i>all battery electric</span>' +
+      '<span><i style="background:' + bevShade(0.5) + '"></i>mixed</span>' +
+      '<span><i style="background:' + bevShade(0) + '"></i>all plug-in hybrid</span>' +
+      '<span class="muted">Tile area = incentive claims. Hover for numbers.</span>';
+    host.appendChild(key);
+  }
 
   function renderBrands(d) {
     var sub = document.getElementById("brand-sub");
     var m = d.by_brand_meta || {};
     var all = (d.by_brand || []).map(function (b) {
-      return { name: b.brand, value: b.units, share: b.share_pct };
+      var bev = b.bev, phev = b.phev;
+      return { name: b.brand, value: b.units, share: b.share_pct, bev: bev, phev: phev,
+               bevFrac: (bev != null && phev != null && (bev + phev) > 0) ? bev / (bev + phev) : NaN };
     });
     var bits = [];
     if (m.metric) bits.push(esc(m.metric));
@@ -130,13 +229,19 @@
     if (m.source) bits.push("Source: " + esc(m.source));
     sub.innerHTML = bits.join(" | ") || "n/a";
 
-    var rows = all.slice();
-    if (brandSort === "units") rows.sort(function (a, b) { return (b.value || 0) - (a.value || 0); });
-    else rows.sort(function (a, b) { return a.name.localeCompare(b.name, "en"); });
-    var max = Math.max.apply(null, all.map(function (r) { return r.value || 0; })) || 1;
-    renderBars("brand-bars", rows, { max: max });
+    var tiles = document.getElementById("brand-tiles");
+    var list = document.getElementById("brand-bars");
+    if (brandView === "tiles") {
+      tiles.hidden = false; list.hidden = true;
+      renderTreemap("brand-tiles", all);
+    } else {
+      tiles.hidden = true; list.hidden = false;
+      var rows = all.slice().sort(function (a, b) { return a.name.localeCompare(b.name, "en"); });
+      var max = Math.max.apply(null, all.map(function (r) { return r.value || 0; })) || 1;
+      renderBars("brand-bars", rows, { max: max });
+    }
     [].forEach.call(document.querySelectorAll("#brand-toggle button"), function (b) {
-      b.classList.toggle("on", b.getAttribute("data-sort") === brandSort);
+      b.classList.toggle("on", b.getAttribute("data-view") === brandView);
     });
 
     var caveat = document.getElementById("brand-caveat");
@@ -149,9 +254,15 @@
     if (!sub) return;
     sub.textContent = (d.totals && d.totals.period_label ? d.totals.period_label + " | " : "") +
       "ZEV registrations by vehicle type, Statistics Canada. Percent = ZEV share of that type's new registrations.";
-    renderBars("vt-bars", (d.by_vehicle_type_latest || []).map(function (r) {
-      return { name: r.vehicle_type, value: r.zev, share: r.share_pct };
-    }));
+    var host = document.getElementById("vt-chart");
+    if (!host) return;
+    var rows = (d.by_vehicle_type_latest || []).filter(function (r) { return (r.zev || 0) > 0; });
+    var total = rows.reduce(function (s, r) { return s + (r.zev || 0); }, 0) || 1;
+    var cols = ["#0f8a5f", "#1f6feb", "#f0a500", "#94a3a0"];
+    drawDonut(host, rows.map(function (r, i) {
+      return { label: r.vehicle_type, count: r.zev, color: cols[i % cols.length],
+               note: pct(r.share_pct) + " of that type is electric" };
+    }), fmt(total), "ZEVs", 170);
   }
 
   // ---- data status pillboxes ----
@@ -188,6 +299,70 @@
     renderBars("prov-bars", (d.by_province_latest || []).map(function (p) {
       return { name: p.province, value: p.zev, share: p.share_pct };
     }), { alt: true });
+    renderMap(d);
+  }
+
+  var PROV_CODE = { "Quebec": "QC", "Ontario": "ON", "British Columbia": "BC", "Manitoba": "MB",
+    "Nova Scotia": "NS", "New Brunswick": "NB", "Saskatchewan": "SK", "Prince Edward Island": "PE",
+    "Yukon": "YT", "Northwest Territories": "NT", "Alberta": "AB", "Nunavut": "NU",
+    "Newfoundland and Labrador": "NL" };
+  var PROV_NAME = {};
+  Object.keys(PROV_CODE).forEach(function (k) { PROV_NAME[PROV_CODE[k]] = k; });
+
+  function shadeFor(share, max) {
+    // light to deep blue by ZEV share
+    var t = Math.max(0.08, Math.min(1, share / (max || 1)));
+    var a = 0.12 + 0.78 * t;
+    return "rgba(37, 99, 235, " + a.toFixed(2) + ")";
+  }
+
+  function renderMap(d) {
+    var host = document.getElementById("prov-map");
+    if (!host || typeof CANADA_MAP === "undefined") return;
+    var by = {};
+    (d.by_province_latest || []).forEach(function (p) { var c = PROV_CODE[p.province]; if (c) by[c] = p; });
+    var max = 0;
+    Object.keys(by).forEach(function (c) { max = Math.max(max, by[c].share_pct || 0); });
+    var svgNS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", CANADA_MAP.viewBox);
+    svg.setAttribute("class", "map-svg");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Map of Canada shaded by ZEV share of new registrations");
+    CANADA_MAP.paths.forEach(function (pth) {
+      var el2 = document.createElementNS(svgNS, "path");
+      el2.setAttribute("d", pth.d);
+      el2.setAttribute("data-prov", pth.p);
+      var rec = by[pth.p];
+      el2.setAttribute("class", "prov" + (rec ? "" : " nodata"));
+      if (rec) el2.setAttribute("fill", shadeFor(rec.share_pct, max));
+      var t = document.createElementNS(svgNS, "title");
+      t.textContent = rec
+        ? PROV_NAME[pth.p] + ": " + fmt(rec.zev) + " ZEVs, " + pct(rec.share_pct) + " of new registrations"
+        : PROV_NAME[pth.p] + ": not reported in this table";
+      el2.appendChild(t);
+      svg.appendChild(el2);
+    });
+    host.innerHTML = "";
+    host.appendChild(svg);
+    var key = el("div", { class: "map-key" });
+    key.innerHTML = '<span><i style="background:' + shadeFor(0.1, 1) + '"></i>low share</span>' +
+      '<span><i style="background:' + shadeFor(1, 1) + '"></i>high share</span>' +
+      '<span><i class="hatch"></i>not in the StatCan table</span>';
+    host.appendChild(key);
+    // hover sync: highlight list row
+    svg.addEventListener("mousemove", function (e) {
+      var p = e.target.closest && e.target.closest("path[data-prov]");
+      [].forEach.call(document.querySelectorAll("#prov-bars .bar-row"), function (r) {
+        r.classList.toggle("hi", !!p && r.getAttribute("data-prov") === p.getAttribute("data-prov"));
+      });
+    });
+    svg.addEventListener("mouseleave", function () {
+      [].forEach.call(document.querySelectorAll("#prov-bars .bar-row.hi"), function (r) { r.classList.remove("hi"); });
+    });
+    [].forEach.call(document.querySelectorAll("#prov-bars .bar-row"), function (r) {
+      var name = r.querySelector(".name"); if (name) r.setAttribute("data-prov", PROV_CODE[name.textContent] || "");
+    });
   }
 
   // ---- SVG donut for powertrain mix ----
@@ -199,54 +374,57 @@
       " L" + i1[0] + "," + i1[1] + " A" + ri + "," + ri + " 0 " + large + " 0 " + i0[0] + "," + i0[1] + " Z";
   }
 
-  function renderMix(d) {
-    var host = document.getElementById("mix-chart");
+  function drawDonut(host, rows, centerBig, centerSmall, size) {
     host.innerHTML = "";
-    var rows = (d.powertrain_mix || []).filter(function (r) { return (r.count || 0) > 0; });
-    if (!rows.length) { host.appendChild(el("p", { class: "muted" }, "No powertrain breakdown available.")); return; }
+    if (!rows.length) { host.appendChild(el("p", { class: "muted" }, "No data available.")); return; }
     var total = rows.reduce(function (s, r) { return s + (r.count || 0); }, 0) || 1;
     var cx = 110, cy = 110, ro = 100, ri = 64, a = 0;
     var svgNS = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(svgNS, "svg");
     svg.setAttribute("viewBox", "0 0 220 220");
-    svg.setAttribute("width", "170"); svg.setAttribute("height", "170");
-    svg.setAttribute("class", "chart-svg");
+    svg.setAttribute("class", "chart-svg donut");
     svg.style.flex = "0 0 auto";
-    svg.style.width = "180px"; svg.style.height = "180px";
+    svg.style.width = size + "px"; svg.style.height = size + "px";
     rows.forEach(function (r) {
       var frac = (r.count || 0) / total;
       var a1 = a + frac * Math.PI * 2;
       var path = document.createElementNS(svgNS, "path");
-      path.setAttribute("d", arcPath(cx, cy, ro, ri, a, a1 - 0.012));
-      path.setAttribute("fill", ptColor(r.fuel_type));
+      path.setAttribute("d", arcPath(cx, cy, ro, ri, a, Math.max(a, a1 - 0.012)));
+      path.setAttribute("fill", r.color);
       var t = document.createElementNS(svgNS, "title");
-      t.textContent = r.fuel_type + ": " + fmt(r.count) + " (" + pct(r.share_pct != null ? r.share_pct : frac * 100) + ")";
+      t.textContent = r.label + ": " + fmt(r.count) + " (" + pct(frac * 100) + ")";
       path.appendChild(t);
       svg.appendChild(path);
       a = a1;
     });
-    // center label = EV (BEV+PHEV) share if present
-    var evShare = (d.totals && d.totals.ev_share_pct_latest);
     var c1 = document.createElementNS(svgNS, "text");
     c1.setAttribute("x", cx); c1.setAttribute("y", cy - 4); c1.setAttribute("text-anchor", "middle");
-    c1.setAttribute("style", "font-size:30px;font-weight:750;fill:var(--ink)");
-    c1.textContent = evShare != null ? pct(evShare, 1) : "";
+    c1.setAttribute("style", "font-size:" + (String(centerBig).length > 5 ? 24 : 30) + "px;font-weight:750;fill:var(--ink)");
+    c1.textContent = centerBig;
     var c2 = document.createElementNS(svgNS, "text");
     c2.setAttribute("x", cx); c2.setAttribute("y", cy + 16); c2.setAttribute("text-anchor", "middle");
     c2.setAttribute("style", "font-size:11px");
-    c2.textContent = evShare != null ? "EV share" : "";
+    c2.textContent = centerSmall;
     svg.appendChild(c1); svg.appendChild(c2);
     host.appendChild(svg);
-    // legend
-    var leg = el("div", { class: "legend", style: "flex-direction:column;align-items:flex-start;gap:7px;margin-top:0;flex:1 1 170px;min-width:170px;white-space:nowrap;" });
+    var leg = el("div", { class: "legend", style: "flex-direction:column;align-items:flex-start;gap:7px;margin-top:0;flex:1 1 170px;min-width:170px;" });
     rows.forEach(function (r) {
-      var s = el("span");
-      s.innerHTML = '<i style="background:' + ptColor(r.fuel_type) + '"></i>' +
-        esc(r.fuel_type) + ': <strong style="color:var(--ink)">' + fmt(r.count) + "</strong> | " +
-        pct(r.share_pct != null ? r.share_pct : (r.count / total) * 100);
-      leg.appendChild(s);
+      var sp = el("span");
+      sp.innerHTML = '<i style="background:' + r.color + '"></i>' +
+        esc(r.label) + ': <strong style="color:var(--ink)">' + fmt(r.count) + "</strong> | " + pct((r.count / total) * 100) +
+        (r.note ? '<small class="lnote">' + esc(r.note) + '</small>' : "");
+      leg.appendChild(sp);
     });
     host.appendChild(leg);
+  }
+
+  function renderMix(d) {
+    var host = document.getElementById("mix-chart");
+    var rows = (d.powertrain_mix || []).filter(function (r) { return (r.count || 0) > 0; });
+    var evShare = (d.totals && d.totals.ev_share_pct_latest);
+    drawDonut(host, rows.map(function (r) {
+      return { label: r.fuel_type, count: r.count, color: ptColor(r.fuel_type) };
+    }), evShare != null ? pct(evShare, 1) : "", evShare != null ? "EV share" : "", 180);
   }
 
   // ---- SVG line/area chart (generic): pts = [{label, value, tip}] ----
@@ -483,9 +661,9 @@
   var brandToggle = document.getElementById("brand-toggle");
   if (brandToggle) {
     brandToggle.addEventListener("click", function (e) {
-      var btn = e.target.closest("button[data-sort]");
+      var btn = e.target.closest("button[data-view]");
       if (!btn) return;
-      brandSort = btn.getAttribute("data-sort");
+      brandView = btn.getAttribute("data-view");
       if (current) renderBrands(current);
     });
   }
