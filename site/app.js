@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var POLL_MINUTES = 60;
+  var POLL_MINUTES = 24 * 60;  // once a day; the data itself changes once a month
   var nf = new Intl.NumberFormat("en-CA");
   var COLORS = { bev: "#0f8a5f", phev: "#1f6feb", hybrid: "#f0a500", other: "#94a3a0" };
 
@@ -59,7 +59,7 @@
       ? "Updated " + when.toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" })
       : "Updated n/a";
     document.getElementById("gen-time").textContent = when ? when.toLocaleString("en-CA") : "n/a";
-    document.getElementById("poll-mins").textContent = POLL_MINUTES;
+    document.getElementById("poll-mins").textContent = POLL_MINUTES >= 1440 ? "day" : POLL_MINUTES + " min";
     if (d.subtitle) document.getElementById("subtitle").textContent = d.subtitle;
   }
 
