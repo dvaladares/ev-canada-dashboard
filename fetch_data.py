@@ -625,6 +625,8 @@ def assemble(statcan, monthly, izev, prev):
             "Headline figures are cross-checked by hand against Electric Autonomy Canada's EV sales "
             "data tracker, which reports the same Statistics Canada release. Their reporting is "
             "credited in the sources list; nothing is scraped from their site.",
+            "Statistics Canada revises past quarters. This page pulls the latest revised values on "
+            "every run, so older points here may differ slightly from charts published at the time.",
             "Every figure on this page is labelled with its source.",
         ],
         "notes": [],

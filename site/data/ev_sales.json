@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-09-13T12:06:49-04:00",
+  "generated_at": "2026-09-13T13:13:51-04:00",
   "subtitle": "Independent, public-data view of zero-emission vehicle registrations in Canada: totals, market share, trend, provinces, vehicle types, and brands.",
   "latest_period": {
     "label": "Q2 2026",
@@ -592,6 +592,7 @@
     "Current brand shares come from S&P Global Mobility (reported via GM Canada and trade press), cited with attribution and refreshed by hand. Complete, current brand-level data in Canada sits behind paid S&P or DesRosiers licences that do not allow republishing.",
     "The vehicle-type panel splits ZEV registrations into passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans, from the same Statistics Canada registration table. Medium and heavy trucks and buses are not in that table, so this dashboard covers light vehicles only.",
     "Headline figures are cross-checked by hand against Electric Autonomy Canada's EV sales data tracker, which reports the same Statistics Canada release. Their reporting is credited in the sources list; nothing is scraped from their site.",
+    "Statistics Canada revises past quarters. This page pulls the latest revised values on every run, so older points here may differ slightly from charts published at the time.",
     "Every figure on this page is labelled with its source."
   ],
   "notes": [],
