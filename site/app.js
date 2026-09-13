@@ -63,8 +63,8 @@
     if (d.subtitle) document.getElementById("subtitle").textContent = d.subtitle;
   }
 
-  function kpiCard(label, value, sub, cls) {
-    return '<div class="kpi"><div class="label">' + esc(label) + '</div>' +
+  function kpiCard(label, value, sub, cls, tip) {
+    return '<div class="kpi"' + (tip ? ' data-tip="' + esc(tip) + '"' : '') + '><div class="label">' + esc(label) + '</div>' +
       '<div class="value">' + value + '</div>' +
       '<div class="sub ' + (cls || "") + '">' + (sub || "") + '</div></div>';
   }
@@ -73,14 +73,18 @@
     var t = d.totals || {};
     var host = document.getElementById("kpis");
     var cards = "";
-    cards += kpiCard("EV registrations", fmt(t.ev_registrations_latest), esc(t.period_label || "") + " | BEV + PHEV");
-    cards += kpiCard("EV market share", pct(t.ev_share_pct_latest), "of all new vehicles");
+    cards += kpiCard("EV registrations", fmt(t.ev_registrations_latest), esc(t.period_label || "") + " | BEV + PHEV", "",
+      "New zero-emission vehicles registered in Canada in the latest quarter. Battery electric plus plug-in hybrid. Statistics Canada table 20-10-0025.");
+    cards += kpiCard("EV market share", pct(t.ev_share_pct_latest), "of all new vehicles", "",
+      "ZEV registrations divided by all new light-vehicle registrations in the same quarter.");
     var bev = t.bev_latest, phev = t.phev_latest;
     var split = (bev != null && phev != null) ? fmt(bev) + " / " + fmt(phev) : "n/a";
-    cards += kpiCard("BEV / PHEV", split, "battery vs plug-in hybrid");
+    cards += kpiCard("BEV / PHEV", split, "battery vs plug-in hybrid", "",
+      "BEV runs on a battery only. PHEV has a battery and a gasoline engine and plugs in to charge.");
     if (t.yoy_growth_pct != null && !isNaN(t.yoy_growth_pct)) {
       var up = t.yoy_growth_pct >= 0;
-      cards += kpiCard("Year-over-year", (up ? "+" : "") + pct(t.yoy_growth_pct), up ? "Up vs same period last year" : "Down vs same period last year", up ? "up" : "down");
+      cards += kpiCard("Year-over-year", (up ? "+" : "") + pct(t.yoy_growth_pct), up ? "Up vs same period last year" : "Down vs same period last year", up ? "up" : "down",
+        "Change in ZEV registrations versus the same quarter one year earlier.");
     } else {
       var n = (d.by_brand || []).length;
       cards += kpiCard("Brands tracked", n ? fmt(n) : "-", "with EV registrations");
@@ -99,7 +103,8 @@
     var max = opts.max || Math.max.apply(null, rows.map(function (r) { return r.value || 0; })) || 1;
     rows.forEach(function (r) {
       var row = el("div", { class: "bar-row" });
-      row.appendChild(el("div", { class: "name", title: r.name }, esc(r.name)));
+      row.setAttribute("data-tip", r.name + ": " + fmt(r.value) + (r.share != null ? " ZEVs, " + pct(r.share) + (opts.shareLabel || " share") : ""));
+      row.appendChild(el("div", { class: "name" }, esc(r.name)));
       var track = el("div", { class: "bar-track" });
       var fill = el("div", { class: "bar-fill" + (opts.alt ? " alt" : "") });
       fill.style.width = "0%";
@@ -266,8 +271,13 @@
   }
 
   // ---- data status pillboxes ----
+  var PILL_TIPS = {
+    live: "Pulled automatically from the Statistics Canada API on the 15th of each month. Committed only when a figure changed.",
+    hist: "Transport Canada iZEV rebate claims. The program ended March 2025, so this is a fixed historical picture.",
+    xcheck: "Electric Autonomy Canada reports the same Statistics Canada release. Compared by hand. Nothing is copied from their site."
+  };
   function statusPill(cls, chip, name, desc, period, updated) {
-    return '<div class="spill ' + cls + '"><span class="chip"><i></i>' + esc(chip) + '</span>' +
+    return '<div class="spill ' + cls + '" data-tip="' + esc(PILL_TIPS[cls] || "") + '"><span class="chip"><i></i>' + esc(chip) + '</span>' +
       '<div class="sname">' + esc(name) + '</div><div class="sdesc">' + esc(desc) + '</div>' +
       '<div class="speriod">' + esc(period || "n/a") + '</div>' +
       '<div class="supd">Updated <b>' + esc(updated ? friendlyDate(updated) : "n/a") + '</b></div></div>';
@@ -298,7 +308,7 @@
       (d.totals && d.totals.period_label ? d.totals.period_label + " | " : "") + "ZEV registrations, Statistics Canada. Percent = ZEV share of that province's new registrations.";
     renderBars("prov-bars", (d.by_province_latest || []).map(function (p) {
       return { name: p.province, value: p.zev, share: p.share_pct };
-    }), { alt: true });
+    }), { alt: true, shareLabel: " of that province's new registrations are ZEVs" });
     renderMap(d);
   }
 
@@ -592,19 +602,25 @@
     var t = d.totals || {};
     var lm = t.latest_month || {};
     var when = d.generated_at ? friendlyDate(String(d.generated_at).slice(0, 10)) : "n/a";
-    function fact(label, value, sub) {
-      return '<div class="fact"><div class="flabel">' + esc(label) + '</div>' +
+    function fact(label, value, sub, tip) {
+      return '<div class="fact"' + (tip ? ' data-tip="' + esc(tip) + '"' : '') + '><div class="flabel">' + esc(label) + '</div>' +
         '<div class="fvalue">' + value + '</div>' +
         (sub ? '<div class="fsub">' + esc(sub) + '</div>' : '') + '</div>';
     }
     host.innerHTML =
       '<p class="eyebrow">At a glance</p>' +
-      fact("Latest quarter", esc(t.period_label || "n/a"), fmt(t.ev_registrations_latest) + " ZEVs, " + pct(t.ev_share_pct_latest) + " share") +
-      fact("Latest month", esc(lm.label || "n/a"), lm.zev != null ? fmt(lm.zev) + " ZEVs, " + pct(lm.share_pct) + " share" : "") +
-      fact("Refresh", "Monthly", "15th of each month, automated. Last run " + when + ".") +
-      fact("Sources", fmt((d.sources || []).length), "public, linked, dated") +
-      fact("Stack", "Python + JS", "standard library, no framework, no build step") +
-      fact("Licence", "MIT", "use it, fork it, break it") +
+      fact("Latest quarter", esc(t.period_label || "n/a"), fmt(t.ev_registrations_latest) + " ZEVs, " + pct(t.ev_share_pct_latest) + " share",
+        "Quarterly registrations, Statistics Canada table 20-10-0025. Published about ten weeks after the quarter ends.") +
+      fact("Latest month", esc(lm.label || "n/a"), lm.zev != null ? fmt(lm.zev) + " ZEVs, " + pct(lm.share_pct) + " share" : "",
+        "Monthly sales, Statistics Canada table 20-10-0085. A different series from the quarterly one, so the two do not tie out exactly.") +
+      fact("Refresh", "Monthly", "15th of each month, automated. Last run " + when + ".",
+        "A GitHub Actions job runs the fetch script and commits only when a figure changed. No human in the loop.") +
+      fact("Sources", fmt((d.sources || []).length), "public, linked, dated",
+        "Every source is listed below with a link and the date it was last pulled.") +
+      fact("Stack", "Python + JS", "standard library, no framework, no build step",
+        "One Python script with no dependencies writes a JSON file. Plain JavaScript draws the charts as SVG.") +
+      fact("Licence", "MIT", "use it, fork it, break it",
+        "Do anything with the code, keep the copyright notice, and accept that it comes with no warranty.") +
       '<a class="btn" href="https://github.com/dvaladares/ev-canada-dashboard" target="_blank" rel="noopener">View the code on GitHub</a>' +
       '<div class="projects"><p class="eyebrow">Other projects</p>' +
       PROJECTS.map(function (p) {
@@ -613,6 +629,14 @@
       }).join("") +
       '<a class="proj more" href="https://github.com/dvaladares" target="_blank" rel="noopener"><span class="pname">All public code</span><span class="pdesc">github.com/dvaladares</span></a>' +
       '</div>';
+  }
+
+  function liftTitles(root) {
+    [].forEach.call(root.querySelectorAll("svg title"), function (t) {
+      var host = t.parentNode;
+      host.setAttribute("data-tip", t.textContent);
+      host.removeChild(t);
+    });
   }
 
   function render(d) {
@@ -627,6 +651,7 @@
     renderVehicleTypes(d);
     renderSources(d);
     renderAbout(d);
+    liftTitles(document);
   }
 
   // ===== tabs =====
@@ -691,4 +716,47 @@
 
   tryFetch();
   setInterval(tryFetch, POLL_MINUTES * 60 * 1000);
+
+  // ===== tooltips: one style for everything with data-tip =====
+  var tip = el("div", { class: "tip", role: "tooltip", hidden: "" });
+  document.body.appendChild(tip);
+  var tipHost = null;
+  function tipTarget(node) {
+    while (node && node !== document) {
+      if (node.getAttribute && node.getAttribute("data-tip")) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+  function placeTip(x, y) {
+    var pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    var left = x + pad, top = y + pad;
+    if (left + w > window.innerWidth - 8) left = x - w - pad;
+    if (top + h > window.innerHeight - 8) top = y - h - pad;
+    tip.style.left = Math.max(8, left) + "px";
+    tip.style.top = Math.max(8, top) + "px";
+  }
+  function showTip(host, x, y) {
+    tipHost = host;
+    tip.textContent = host.getAttribute("data-tip");
+    tip.hidden = false;
+    placeTip(x, y);
+  }
+  function hideTip() { tipHost = null; tip.hidden = true; }
+  document.addEventListener("mousemove", function (e) {
+    var host = tipTarget(e.target);
+    if (!host) { if (tipHost) hideTip(); return; }
+    if (host !== tipHost) showTip(host, e.clientX, e.clientY); else placeTip(e.clientX, e.clientY);
+  });
+  document.addEventListener("mouseleave", hideTip);
+  document.addEventListener("scroll", hideTip, { passive: true });
+  document.addEventListener("touchstart", function (e) {
+    var host = tipTarget(e.target);
+    if (host) { var t = e.touches[0]; showTip(host, t.clientX, t.clientY); } else hideTip();
+  }, { passive: true });
+  document.addEventListener("focusin", function (e) {
+    var host = tipTarget(e.target);
+    if (host) { var r = host.getBoundingClientRect(); showTip(host, r.left, r.bottom); }
+  });
+  document.addEventListener("focusout", hideTip);
 })();

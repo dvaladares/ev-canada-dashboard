@@ -26,7 +26,7 @@
       <button type="button" class="tab" data-tab="about">About</button>
     </nav>
     <div class="badges">
-      <span class="badge live"><span class="live-dot live-pulse" id="live-dot"></span><span id="updated-badge">Updated ...</span></span>
+      <span class="badge live" data-tip="Date of the last data commit. The job runs on the 15th of each month and commits only when a figure changed."><span class="live-dot live-pulse" id="live-dot"></span><span id="updated-badge">Updated ...</span></span>
     </div>
   </div>
 </header>
@@ -42,8 +42,8 @@
       <p id="subtitle" class="lede">Independent, public-data view of zero-emission vehicle registrations in Canada.</p>
     </div>
     <div class="hero-badges">
-      <span class="badge" id="period-badge">Latest quarter: ...</span>
-      <span class="badge" id="month-badge" hidden>Latest month: ...</span>
+      <span class="badge" id="period-badge" data-tip="Latest quarter in the Statistics Canada registrations table.">Latest quarter: ...</span>
+      <span class="badge" id="month-badge" data-tip="Latest month in the Statistics Canada sales table, with ZEV units." hidden>Latest month: ...</span>
     </div>
   </section>
 
@@ -64,19 +64,19 @@
     <div class="card" id="trend-card">
       <div class="card-head">
         <div>
-          <h2 id="trend-title">EV trend</h2>
+          <h2 id="trend-title" data-tip="ZEV registrations over time. Hover a point for the value.">EV trend</h2>
           <p class="card-sub" id="trend-sub">...</p>
         </div>
         <div class="toggle" id="trend-toggle" role="group" aria-label="Trend interval">
-          <button type="button" data-mode="quarter" class="on">Quarterly</button>
-          <button type="button" data-mode="month">Monthly</button>
+          <button type="button" data-mode="quarter" class="on" data-tip="Quarterly registrations, table 20-10-0025. BEV and PHEV shown separately.">Quarterly</button>
+          <button type="button" data-mode="month" data-tip="Monthly sales, table 20-10-0085. The most timely series. ZEV is one bucket.">Monthly</button>
         </div>
       </div>
       <div id="trend-chart"></div>
       <p class="card-sub trend-foot" id="trend-foot"></p>
     </div>
     <div class="card">
-      <h2>Powertrain mix</h2>
+      <h2 data-tip="All new registrations in the latest quarter, split by what powers the vehicle.">Powertrain mix</h2>
       <p class="card-sub" id="mix-sub">Share of new registrations, latest quarter</p>
       <div id="mix-chart" class="donut-wrap"></div>
     </div>
@@ -85,7 +85,7 @@
   <!-- Province map + vehicle type -->
   <section class="grid cols-map">
     <div class="card">
-      <h2>By province</h2>
+      <h2 data-tip="Shading is ZEV share of each province's new registrations. Hover a province or a row for numbers.">By province</h2>
       <p class="card-sub" id="prov-sub">...</p>
       <div class="map-wrap">
         <div id="prov-map" class="map-host"></div>
@@ -93,7 +93,7 @@
       </div>
     </div>
     <div class="card">
-      <h2>By vehicle type</h2>
+      <h2 data-tip="Share of ZEVs by body type. The legend shows how electric each type is.">By vehicle type</h2>
       <p class="card-sub" id="vt-sub">...</p>
       <div id="vt-chart" class="donut-wrap"></div>
       <div class="note caveat">Light vehicles only. Statistics Canada splits passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans. Medium and heavy trucks and buses are not in that table.</div>
@@ -104,12 +104,12 @@
   <section class="card full">
     <div class="card-head">
       <div>
-        <h2>By brand</h2>
+        <h2 data-tip="Rebate claims by make under the federal iZEV program, FY2024-25. Not a complete sales count.">By brand</h2>
         <p class="card-sub" id="brand-sub">...</p>
       </div>
       <div class="toggle" id="brand-toggle" role="group" aria-label="Brand view">
-        <button type="button" data-view="tiles" class="on">Tiles</button>
-        <button type="button" data-view="list">List, A to Z</button>
+        <button type="button" data-view="tiles" class="on" data-tip="Treemap. Tile area is claims. Colour is the battery vs plug-in mix.">Tiles</button>
+        <button type="button" data-view="list" data-tip="Every brand as a bar, alphabetical.">List, A to Z</button>
       </div>
     </div>
     <div id="brand-tiles" class="treemap-host"></div>
