@@ -1,5 +1,7 @@
 # EV Canada Dashboard
 
+<img src="./docs/flag-canada.svg" width="28" alt="Flag of Canada" /> Made in Canada. Public data only. Not advice.
+
 An independent, self-updating dashboard of zero-emission vehicle (ZEV) registrations in
 Canada: headline totals, market share, powertrain mix, a quarterly and monthly trend, the
 provincial split, a vehicle-type split, and a by-brand view. Every figure names its
