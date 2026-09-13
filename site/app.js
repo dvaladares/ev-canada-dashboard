@@ -205,13 +205,14 @@
     var rows = (d.powertrain_mix || []).filter(function (r) { return (r.count || 0) > 0; });
     if (!rows.length) { host.appendChild(el("p", { class: "muted" }, "No powertrain breakdown available.")); return; }
     var total = rows.reduce(function (s, r) { return s + (r.count || 0); }, 0) || 1;
-    var cx = 110, cy = 110, ro = 100, ri = 62, a = 0;
+    var cx = 110, cy = 110, ro = 100, ri = 64, a = 0;
     var svgNS = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(svgNS, "svg");
     svg.setAttribute("viewBox", "0 0 220 220");
-    svg.setAttribute("width", "220"); svg.setAttribute("height", "220");
+    svg.setAttribute("width", "170"); svg.setAttribute("height", "170");
     svg.setAttribute("class", "chart-svg");
     svg.style.flex = "0 0 auto";
+    svg.style.width = "180px"; svg.style.height = "180px";
     rows.forEach(function (r) {
       var frac = (r.count || 0) / total;
       var a1 = a + frac * Math.PI * 2;
@@ -228,7 +229,7 @@
     var evShare = (d.totals && d.totals.ev_share_pct_latest);
     var c1 = document.createElementNS(svgNS, "text");
     c1.setAttribute("x", cx); c1.setAttribute("y", cy - 4); c1.setAttribute("text-anchor", "middle");
-    c1.setAttribute("style", "font-size:26px;font-weight:750;fill:var(--ink)");
+    c1.setAttribute("style", "font-size:30px;font-weight:750;fill:var(--ink)");
     c1.textContent = evShare != null ? pct(evShare, 1) : "";
     var c2 = document.createElementNS(svgNS, "text");
     c2.setAttribute("x", cx); c2.setAttribute("y", cy + 16); c2.setAttribute("text-anchor", "middle");
@@ -237,7 +238,7 @@
     svg.appendChild(c1); svg.appendChild(c2);
     host.appendChild(svg);
     // legend
-    var leg = el("div", { class: "legend", style: "flex-direction:column;align-items:flex-start;gap:9px;" });
+    var leg = el("div", { class: "legend", style: "flex-direction:column;align-items:flex-start;gap:7px;margin-top:0;flex:1 1 170px;min-width:170px;white-space:nowrap;" });
     rows.forEach(function (r) {
       var s = el("span");
       s.innerHTML = '<i style="background:' + ptColor(r.fuel_type) + '"></i>' +
@@ -265,7 +266,7 @@
     if (pts.length < 2) { host.appendChild(el("p", { class: "muted" }, "Not enough history to plot a trend yet.")); return; }
     var color = opts.color || COLORS.bev;
     var fillRGBA = opts.fill || "rgba(15,138,95,.12)";
-    var W = 600, H = 260, padL = 48, padR = 14, padT = 16, padB = 34;
+    var W = 600, H = 300, padL = 48, padR = 14, padT = 16, padB = 34;
     var iw = W - padL - padR, ih = H - padT - padB;
     var maxV = Math.max.apply(null, pts.map(function (p) { return p.value; }));
     var niceMax = niceCeil(maxV);
