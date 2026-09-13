@@ -18,9 +18,9 @@ Live site: https://ev-canada-dashboard.vercel.app (the About tab is at /#about)
 | Headline cards | How many ZEVs were registered last quarter, their share of all new vehicles, the BEV vs PHEV split, and year-over-year change | Statistics Canada 20-10-0025-01 |
 | Trend (quarterly or monthly) | Where the market is going | Statistics Canada 20-10-0025-01 (quarterly registrations) and 20-10-0085-01 (monthly sales) |
 | Powertrain mix | Gasoline, hybrid, BEV, PHEV, diesel shares of new registrations | Statistics Canada 20-10-0025-01 |
-| By province | Which provinces lead, in units and in share | Statistics Canada 20-10-0025-01 |
-| By vehicle type | Passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers), vans | Statistics Canada 20-10-0025-01 |
-| By brand | Incentivized EV claims by make, A to Z by default, every brand shown (historical) | Transport Canada iZEV program, Open Government Licence |
+| By province | Map shaded by ZEV share, plus units and share per province | Statistics Canada 20-10-0025-01 |
+| By vehicle type | Donut of ZEVs by type, with each type's electric share | Statistics Canada 20-10-0025-01 |
+| By brand | Treemap of incentivized EV claims by make, coloured by BEV vs PHEV mix, with an A to Z list view (historical) | Transport Canada iZEV program, Open Government Licence |
 
 "ZEV" means battery-electric (BEV) plus plug-in hybrid (PHEV). Conventional hybrids are
 counted separately.
