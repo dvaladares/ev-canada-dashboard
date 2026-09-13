@@ -115,9 +115,7 @@
     });
   }
 
-  var BRAND_LIMIT = 12;
   var brandSort = "az";      // "az" (default, neutral) or "units"
-  var brandShowAll = false;
 
   function renderBrands(d) {
     var sub = document.getElementById("brand-sub");
@@ -136,16 +134,7 @@
     if (brandSort === "units") rows.sort(function (a, b) { return (b.value || 0) - (a.value || 0); });
     else rows.sort(function (a, b) { return a.name.localeCompare(b.name, "en"); });
     var max = Math.max.apply(null, all.map(function (r) { return r.value || 0; })) || 1;
-    var shown = brandShowAll ? rows : rows.slice(0, BRAND_LIMIT);
-    renderBars("brand-bars", shown, { max: max });
-
-    var more = document.getElementById("brand-more");
-    if (more) {
-      if (all.length > BRAND_LIMIT) {
-        more.hidden = false;
-        more.textContent = brandShowAll ? "Show fewer" : "Show all " + all.length + " brands";
-      } else more.hidden = true;
-    }
+    renderBars("brand-bars", rows, { max: max });
     [].forEach.call(document.querySelectorAll("#brand-toggle button"), function (b) {
       b.classList.toggle("on", b.getAttribute("data-sort") === brandSort);
     });
@@ -496,13 +485,6 @@
       var btn = e.target.closest("button[data-sort]");
       if (!btn) return;
       brandSort = btn.getAttribute("data-sort");
-      if (current) renderBrands(current);
-    });
-  }
-  var brandMore = document.getElementById("brand-more");
-  if (brandMore) {
-    brandMore.addEventListener("click", function () {
-      brandShowAll = !brandShowAll;
       if (current) renderBrands(current);
     });
   }
