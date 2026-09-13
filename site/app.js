@@ -59,7 +59,7 @@
       ? "Updated " + when.toLocaleDateString("en-CA", { year: "numeric", month: "short", day: "numeric" })
       : "Updated n/a";
     document.getElementById("gen-time").textContent = when ? when.toLocaleString("en-CA") : "n/a";
-    document.getElementById("poll-mins").textContent = POLL_MINUTES >= 1440 ? "day" : POLL_MINUTES + " min";
+    var pm = document.getElementById("poll-mins"); if (pm) pm.textContent = "";
     if (d.subtitle) document.getElementById("subtitle").textContent = d.subtitle;
   }
 
