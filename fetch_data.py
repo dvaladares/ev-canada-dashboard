@@ -83,7 +83,6 @@ VEHICLE_TYPES = {"Passenger cars": 2, "Pickup trucks": 3, "Multi-purpose vehicle
 IZEV_PKG = "42986a95-be23-436e-af15-7c6bf292a2e1"
 CKAN = "https://open.canada.ca/data/api/3/action/package_show?id=" + IZEV_PKG
 
-TOP_BRANDS = 12  # show top N brands, fold the rest into "Other brands"
 
 # ----------------------------------------------------------------------------
 # Logging
@@ -419,18 +418,12 @@ def aggregate_izev():
     brands.sort(key=lambda b: -b["units"])
     grand_total = sum(b["units"] for b in brands)
 
-    # top N + fold remainder
-    top = brands[:TOP_BRANDS]
-    rest = brands[TOP_BRANDS:]
+    # every brand, sorted by units; the front end re-sorts (A to Z by default)
     rows = []
-    for b in top:
+    for b in brands:
         rows.append({"brand": b["brand"], "units": b["units"],
                      "share_pct": round(b["units"] / grand_total * 100.0, 1) if grand_total else None,
                      "bev": b["bev"], "phev": b["phev"]})
-    if rest:
-        rsum = sum(b["units"] for b in rest)
-        rows.append({"brand": f"Other ({len(rest)} brands)", "units": rsum,
-                     "share_pct": round(rsum / grand_total * 100.0, 1) if grand_total else None})
 
     period = _fy_period_phrase(fy_label)
     layer = {

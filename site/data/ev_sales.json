@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-09-13T13:17:24-04:00",
+  "generated_at": "2026-09-13T13:46:39-04:00",
   "subtitle": "Independent, public-data view of zero-emission vehicle registrations in Canada: totals, market share, trend, provinces, vehicle types, and brands.",
   "latest_period": {
     "label": "Q2 2026",
@@ -486,9 +486,116 @@
       "phev": 0
     },
     {
-      "brand": "Other (16 brands)",
-      "units": 15659,
-      "share_pct": 8.0
+      "brand": "Jeep",
+      "units": 2290,
+      "share_pct": 1.2,
+      "bev": 0,
+      "phev": 2290
+    },
+    {
+      "brand": "Subaru",
+      "units": 2029,
+      "share_pct": 1.0,
+      "bev": 2026,
+      "phev": 3
+    },
+    {
+      "brand": "Polestar",
+      "units": 1995,
+      "share_pct": 1.0,
+      "bev": 1995,
+      "phev": 0
+    },
+    {
+      "brand": "VinFast",
+      "units": 1606,
+      "share_pct": 0.8,
+      "bev": 1606,
+      "phev": 0
+    },
+    {
+      "brand": "BMW",
+      "units": 1373,
+      "share_pct": 0.7,
+      "bev": 1193,
+      "phev": 180
+    },
+    {
+      "brand": "Fiat",
+      "units": 1172,
+      "share_pct": 0.6,
+      "bev": 1172,
+      "phev": 0
+    },
+    {
+      "brand": "Lexus",
+      "units": 1043,
+      "share_pct": 0.5,
+      "bev": 0,
+      "phev": 1043
+    },
+    {
+      "brand": "Mercedes-Benz",
+      "units": 1021,
+      "share_pct": 0.5,
+      "bev": 1021,
+      "phev": 0
+    },
+    {
+      "brand": "Dodge",
+      "units": 690,
+      "share_pct": 0.4,
+      "bev": 41,
+      "phev": 649
+    },
+    {
+      "brand": "MINI",
+      "units": 647,
+      "share_pct": 0.3,
+      "bev": 365,
+      "phev": 282
+    },
+    {
+      "brand": "Chrysler",
+      "units": 597,
+      "share_pct": 0.3,
+      "bev": 0,
+      "phev": 597
+    },
+    {
+      "brand": "Honda",
+      "units": 521,
+      "share_pct": 0.3,
+      "bev": 521,
+      "phev": 0
+    },
+    {
+      "brand": "Lincoln",
+      "units": 330,
+      "share_pct": 0.2,
+      "bev": 0,
+      "phev": 330
+    },
+    {
+      "brand": "Alfa Romeo",
+      "units": 283,
+      "share_pct": 0.1,
+      "bev": 0,
+      "phev": 283
+    },
+    {
+      "brand": "Fisker",
+      "units": 60,
+      "share_pct": 0.0,
+      "bev": 60,
+      "phev": 0
+    },
+    {
+      "brand": "Cadillac",
+      "units": 2,
+      "share_pct": 0.0,
+      "bev": 2,
+      "phev": 0
     }
   ],
   "by_brand_meta": {
@@ -540,6 +647,6 @@
     "statcan_ok": true,
     "izev_fy": "FY2024-25",
     "izev_total": 196171,
-    "izev_fetched": "2026-09-13T13:17:24"
+    "izev_fetched": "2026-09-13T13:46:39"
   }
 }
