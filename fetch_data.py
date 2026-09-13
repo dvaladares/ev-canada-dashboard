@@ -18,8 +18,8 @@ Sources
    -> the by-brand layer. CAVEAT: incentivized + price-capped vehicles only,
    program ended 2025-03-31 (historical). Stated prominently on the page.
 
-3. S&P Global Mobility brand shares (via OEM disclosures): the most current
-   credible brand signal. Surfaced as an attributed reference note (not a feed).
+Current brand-level data in Canada (S&P Global Mobility, DesRosiers) is licensed
+and is not shown here.
 
 Run:  python3 fetch_data.py [--force-izev] [--quiet]
 """
@@ -443,8 +443,8 @@ def aggregate_izev():
             "credibility_note": (
                 "iZEV-incentivized vehicles only. Price caps exclude premium EVs (such as the Tesla "
                 "Model S and X), and the federal program ended March 2025, so this is a historical "
-                "brand picture, not a complete or current sales count. For the most current brand "
-                "shares, see the S&P Global Mobility figures in the Current brand shares panel."
+                "brand picture, not a complete or current sales count. Current brand-level data "
+                "in Canada is licensed (S&P Global Mobility, DesRosiers) and is not shown here."
             ),
         },
         "_izev_total": grand_total,
@@ -508,39 +508,6 @@ def load_prev():
         return None
 
 
-# Current credible brand-share reference: S&P Global Mobility registration data, as
-# reported publicly via OEM disclosures / trade press. This is the authoritative *current*
-# brand signal, but S&P/DesRosiers data is licensed and CANNOT be auto-scraped or
-# republished wholesale (confirmed: S&P blocks crawlers; Electric Autonomy, GoodCarBadCar,
-# Drive Tesla all bar automated reuse). So these few headline figures are CURATED and
-# refreshed BY HAND with attribution: citing reported facts, not mirroring a dataset.
-# To refresh: update `as_of`, `rows`, and `reviewed` when a newer S&P-sourced figure is
-# published (e.g. the next GM Canada quarterly EV release or S&P "Canadian EV Insights").
-CURRENT_BRAND_SHARES = {
-    "as_of": "FY2025 + Q1 2026",
-    "reviewed": "2026-06-19",
-    "metric": "Share of new EV registrations, Canada",
-    "source": "S&P Global Mobility",
-    "via": "GM Canada release; Motor Illustrated / Drive Tesla Canada",
-    "source_url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
-    # Q1 2026 brand ranking (S&P Global Mobility, as reported publicly). Brand-level shares
-    # are comparable; "GM (all brands)" and "Cadillac (luxury)" use different denominators -
-    # see each note. Do NOT attribute these to Electric Autonomy (they publish aggregate only).
-    "rows": [
-        {"period": "Q1 2026", "label": "Chevrolet", "value": "9.7%", "note": "of the EV market"},
-        {"period": "Q1 2026", "label": "Kia", "value": "9.5%", "note": "of the EV market"},
-        {"period": "Q1 2026", "label": "Toyota", "value": "9.3%", "note": "of the EV market"},
-        {"period": "Q1 2026", "label": "Hyundai", "value": "8.7%", "note": "of the EV market"},
-        {"period": "Q1 2026", "label": "Tesla", "value": "7.8%", "note": "fallen from ~47% three years ago"},
-        {"period": "Q1 2026", "label": "GM (all brands)", "value": "~20%", "note": "#1 overall (Chevy, Cadillac, GMC); outsold Tesla; EV sales +13.1% YoY"},
-        {"period": "Q1 2026", "label": "Cadillac", "value": "50.6%", "note": "of the luxury-EV segment"},
-    ],
-    "context": "Full-year 2025: GM #1 at 21.2% (~25,000 EVs), Chevrolet 13.3% (Equinox EV the #2-registered EV); Tesla ~19,829 units, down ~63% YoY.",
-    "note": ("Most recent published brand figures, cited with attribution and refreshed by hand. "
-             "Canada has no free, redistributable brand-level data feed: S&P Global Mobility and "
-             "DesRosiers registration data is licensed and may not be auto-scraped or republished, "
-             "so these headline figures are quoted (like a reported statistic), not mirrored from a dataset."),
-}
 
 
 def assemble(statcan, monthly, izev, prev):
@@ -562,7 +529,6 @@ def assemble(statcan, monthly, izev, prev):
         "by_vehicle_type_latest": statcan.get("by_vehicle_type_latest", []),
         "by_brand": izev.get("by_brand", []),
         "by_brand_meta": izev.get("by_brand_meta", {}),
-        "current_brand_shares": CURRENT_BRAND_SHARES,
         "sources": [
             {
                 "name": "Statistics Canada, Table 20-10-0025-01",
@@ -587,14 +553,6 @@ def assemble(statcan, monthly, izev, prev):
                 "accessed": TODAY,
             },
             {
-                "name": "S&P Global Mobility (via GM Canada and trade press)",
-                "detail": "Current brand shares (the 'Current brand shares' panel), cited with "
-                          "attribution and refreshed by hand. S&P data is licensed, so it is not "
-                          "scraped or republished as a dataset.",
-                "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
-                "accessed": TODAY,
-            },
-            {
                 "name": "Electric Autonomy Canada, EV sales data tracker",
                 "detail": "Independent cross-check, not a data feed. Their Q2 2026 report (Neil Vorano, "
                           "September 9, 2026) matches this dashboard on every shared figure: 58,811 ZEVs, "
@@ -615,9 +573,8 @@ def assemble(statcan, monthly, izev, prev):
             "The by-brand chart uses Transport Canada's iZEV data, the only free Canadian source with "
             "a vehicle-make breakdown. It covers incentivized, price-capped vehicles only, and the "
             "program ended March 2025, so it understates premium brands and is a historical snapshot.",
-            "Current brand shares come from S&P Global Mobility (reported via GM Canada and trade "
-            "press), cited with attribution and refreshed by hand. Complete, current brand-level data "
-            "in Canada sits behind paid S&P or DesRosiers licences that do not allow republishing.",
+            "Current brand-level data in Canada sits behind paid S&P Global Mobility or DesRosiers "
+            "licences that do not allow republishing, so no current brand shares are shown.",
             "The vehicle-type panel splits ZEV registrations into passenger cars, pickup trucks, "
             "multi-purpose vehicles (SUVs and crossovers) and vans, from the same Statistics Canada "
             "registration table. Medium and heavy trucks and buses are not in that table, so this "

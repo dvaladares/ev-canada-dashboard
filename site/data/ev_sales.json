@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-09-13T13:13:51-04:00",
+  "generated_at": "2026-09-13T13:17:24-04:00",
   "subtitle": "Independent, public-data view of zero-emission vehicle registrations in Canada: totals, market share, trend, provinces, vehicle types, and brands.",
   "latest_period": {
     "label": "Q2 2026",
@@ -496,61 +496,7 @@
     "source_url": "https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1",
     "period": "iZEV claims, FY2024-25 (Apr 2024 to Mar 2025)",
     "metric": "BEV + PHEV incentive claims",
-    "credibility_note": "iZEV-incentivized vehicles only. Price caps exclude premium EVs (such as the Tesla Model S and X), and the federal program ended March 2025, so this is a historical brand picture, not a complete or current sales count. For the most current brand shares, see the S&P Global Mobility figures in the Current brand shares panel."
-  },
-  "current_brand_shares": {
-    "as_of": "FY2025 + Q1 2026",
-    "reviewed": "2026-06-19",
-    "metric": "Share of new EV registrations, Canada",
-    "source": "S&P Global Mobility",
-    "via": "GM Canada release; Motor Illustrated / Drive Tesla Canada",
-    "source_url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
-    "rows": [
-      {
-        "period": "Q1 2026",
-        "label": "Chevrolet",
-        "value": "9.7%",
-        "note": "of the EV market"
-      },
-      {
-        "period": "Q1 2026",
-        "label": "Kia",
-        "value": "9.5%",
-        "note": "of the EV market"
-      },
-      {
-        "period": "Q1 2026",
-        "label": "Toyota",
-        "value": "9.3%",
-        "note": "of the EV market"
-      },
-      {
-        "period": "Q1 2026",
-        "label": "Hyundai",
-        "value": "8.7%",
-        "note": "of the EV market"
-      },
-      {
-        "period": "Q1 2026",
-        "label": "Tesla",
-        "value": "7.8%",
-        "note": "fallen from ~47% three years ago"
-      },
-      {
-        "period": "Q1 2026",
-        "label": "GM (all brands)",
-        "value": "~20%",
-        "note": "#1 overall (Chevy, Cadillac, GMC); outsold Tesla; EV sales +13.1% YoY"
-      },
-      {
-        "period": "Q1 2026",
-        "label": "Cadillac",
-        "value": "50.6%",
-        "note": "of the luxury-EV segment"
-      }
-    ],
-    "context": "Full-year 2025: GM #1 at 21.2% (~25,000 EVs), Chevrolet 13.3% (Equinox EV the #2-registered EV); Tesla ~19,829 units, down ~63% YoY.",
-    "note": "Most recent published brand figures, cited with attribution and refreshed by hand. Canada has no free, redistributable brand-level data feed: S&P Global Mobility and DesRosiers registration data is licensed and may not be auto-scraped or republished, so these headline figures are quoted (like a reported statistic), not mirrored from a dataset."
+    "credibility_note": "iZEV-incentivized vehicles only. Price caps exclude premium EVs (such as the Tesla Model S and X), and the federal program ended March 2025, so this is a historical brand picture, not a complete or current sales count. Current brand-level data in Canada is licensed (S&P Global Mobility, DesRosiers) and is not shown here."
   },
   "sources": [
     {
@@ -572,12 +518,6 @@
       "accessed": "2026-09-13"
     },
     {
-      "name": "S&P Global Mobility (via GM Canada and trade press)",
-      "detail": "Current brand shares (the 'Current brand shares' panel), cited with attribution and refreshed by hand. S&P data is licensed, so it is not scraped or republished as a dataset.",
-      "url": "https://www.spglobal.com/mobility/en/info/0521/automotive-insights-canada-evs.html",
-      "accessed": "2026-09-13"
-    },
-    {
       "name": "Electric Autonomy Canada, EV sales data tracker",
       "detail": "Independent cross-check, not a data feed. Their Q2 2026 report (Neil Vorano, September 9, 2026) matches this dashboard on every shared figure: 58,811 ZEVs, 10.7% share, BEV 7.4%, PHEV 3.3%, BC 18.7%, Quebec 17.8%, Ontario 8.2%.",
       "url": "https://electricautonomy.ca/data-trackers/ev-sales-data/2026-09-09/zev-10-7-per-cent-for-q2-statscan/",
@@ -589,7 +529,7 @@
     "Headline figures (registrations, market share, powertrain mix, the trend, and the provincial split) come from Statistics Canada new motor vehicle registrations, the standard proxy for new sales.",
     "The trend chart toggles between quarterly registrations (Table 20-10-0025) and monthly sales (Table 20-10-0085). These are two different Statistics Canada series, so the monthly and quarterly numbers will not match exactly.",
     "The by-brand chart uses Transport Canada's iZEV data, the only free Canadian source with a vehicle-make breakdown. It covers incentivized, price-capped vehicles only, and the program ended March 2025, so it understates premium brands and is a historical snapshot.",
-    "Current brand shares come from S&P Global Mobility (reported via GM Canada and trade press), cited with attribution and refreshed by hand. Complete, current brand-level data in Canada sits behind paid S&P or DesRosiers licences that do not allow republishing.",
+    "Current brand-level data in Canada sits behind paid S&P Global Mobility or DesRosiers licences that do not allow republishing, so no current brand shares are shown.",
     "The vehicle-type panel splits ZEV registrations into passenger cars, pickup trucks, multi-purpose vehicles (SUVs and crossovers) and vans, from the same Statistics Canada registration table. Medium and heavy trucks and buses are not in that table, so this dashboard covers light vehicles only.",
     "Headline figures are cross-checked by hand against Electric Autonomy Canada's EV sales data tracker, which reports the same Statistics Canada release. Their reporting is credited in the sources list; nothing is scraped from their site.",
     "Statistics Canada revises past quarters. This page pulls the latest revised values on every run, so older points here may differ slightly from charts published at the time.",
@@ -600,6 +540,6 @@
     "statcan_ok": true,
     "izev_fy": "FY2024-25",
     "izev_total": 196171,
-    "izev_fetched": "2026-09-13T12:06:49"
+    "izev_fetched": "2026-09-13T13:17:24"
   }
 }
