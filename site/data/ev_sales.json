@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "generated_at": "2026-09-13T13:46:39-04:00",
+  "generated_at": "2026-09-15T17:42:58+00:00",
   "subtitle": "Independent, public-data view of zero-emission vehicle registrations in Canada: totals, market share, trend, provinces, vehicle types, and brands.",
   "latest_period": {
     "label": "Q2 2026",
@@ -14,9 +14,9 @@
     "yoy_growth_pct": 26.7,
     "period_label": "Q2 2026",
     "latest_month": {
-      "label": "Jun 2026",
-      "zev": 21876,
-      "share_pct": 11.5
+      "label": "Jul 2026",
+      "zev": 18920,
+      "share_pct": 10.7
     }
   },
   "powertrain_mix": [
@@ -145,13 +145,6 @@
     }
   ],
   "ev_trend_monthly": [
-    {
-      "period": "Jul'24",
-      "ref_per": "2024-07-01",
-      "zev": 20989,
-      "all": 168310,
-      "zev_share_pct": 12.5
-    },
     {
       "period": "Aug'24",
       "ref_per": "2024-08-01",
@@ -312,6 +305,13 @@
       "zev": 21876,
       "all": 190167,
       "zev_share_pct": 11.5
+    },
+    {
+      "period": "Jul'26",
+      "ref_per": "2026-07-01",
+      "zev": 18920,
+      "all": 176156,
+      "zev_share_pct": 10.7
     }
   ],
   "by_province_latest": [
@@ -610,19 +610,19 @@
       "name": "Statistics Canada, Table 20-10-0025-01",
       "detail": "Quarterly ZEV, BEV and PHEV registrations by province and vehicle type. Powers the totals, market share, powertrain mix, trend, provincial and vehicle-type breakdowns.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010002501",
-      "accessed": "2026-09-13"
+      "accessed": "2026-09-15"
     },
     {
       "name": "Statistics Canada, Table 20-10-0085-01",
       "detail": "Monthly new-vehicle sales (zero-emission bucket). Powers the monthly trend view, the most timely series, through the latest reported month.",
       "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010008501",
-      "accessed": "2026-09-13"
+      "accessed": "2026-09-15"
     },
     {
       "name": "Transport Canada, iZEV Program (Open Canada)",
       "detail": "Incentivized BEV and PHEV claims by make (FY2024-25). Powers the by-brand chart. Incentivized and price-capped only; the program ended March 2025.",
       "url": "https://open.canada.ca/data/en/dataset/42986a95-be23-436e-af15-7c6bf292a2e1",
-      "accessed": "2026-09-13"
+      "accessed": "2026-09-15"
     },
     {
       "name": "Electric Autonomy Canada, EV sales data tracker",
@@ -647,6 +647,6 @@
     "statcan_ok": true,
     "izev_fy": "FY2024-25",
     "izev_total": 196171,
-    "izev_fetched": "2026-09-13T13:46:39"
+    "izev_fetched": "2026-09-15T17:42:58"
   }
 }
